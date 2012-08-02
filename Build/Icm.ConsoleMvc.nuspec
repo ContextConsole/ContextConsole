@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/10/nuspec.xsd">
+  <metadata>
+    <id>Icm.ConsoleMvc</id>
+    <version>1.0.0-beta</version>
+    <title>ICM Console MVC library</title>
+    <authors>Ignacio Calvo</authors>
+    <owners>Ignacio Calvo</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>MVC framework for command line applications</description>
+    <releaseNotes>First release.</releaseNotes>
+    <projectUrl>https://bitbucket.org/icalvo/icm.consolemvc</projectUrl>
+<!--
+    <licenseUrl>http://</licenseUrl>
+-->
+    <language>en-US</language>
+    <tags>commandline command line cli mvc library</tags>
+    <dependencies>
+      <dependency id="Icm.Core" version="1.0.0-beta" />
+      <dependency id="Ninject" version="3.0" />
+    </dependencies>
+  </metadata>
+</package>

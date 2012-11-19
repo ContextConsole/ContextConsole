@@ -1,4 +1,6 @@
-Public MustInherit Class ConsoleMvcApplication
+Imports Icm.Collections
+
+Public Class ConsoleMvcApplication
 
     Public Sub Start()
         Initialize()
@@ -17,13 +19,20 @@ Public MustInherit Class ConsoleMvcApplication
             .Bind(Of IControllerManager).To(Of ReflectionControllerManager).InSingletonScope()
             .Bind(Of IFrontInteractor).To(Of StreamsFrontInteractor).InSingletonScope()
             .Bind(Of IInteractor).To(Of StreamsInteractor).InSingletonScope()
+            .Bind(Of ITokenParser).To(Of StandardTokenParser).InSingletonScope()
+            Dim frontControllerTypes = Icm.Reflection.GetAllImplementors(Of IFrontController)()
+            If frontControllerTypes.Count > 1 Then
+                Throw New InvalidOperationException("Too many front controller implementations: " & frontControllerTypes.Select(Function(typ) typ.Name).JoinStr(", "))
+            Else
+                .Bind(Of IFrontController).To(frontControllerTypes.First)
+            End If
+
             If loadAllBackControllers Then
                 Dim backControllerTypes = Icm.Reflection.GetAllImplementors(Of IBackController)()
 
                 For Each backControllerType In backControllerTypes
                     .Bind(Of IBackController).To(backControllerType)
                 Next
-
             End If
         End With
 

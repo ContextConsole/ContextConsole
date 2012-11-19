@@ -4,8 +4,7 @@ Imports Icm.ConsoleMvc
 Public Module App
 
     Public Sub Main()
-        Dim app As New ConsoleMvcApplication(Of MainController)
-
+        Dim app As New ConsoleMvcApplication
         app.Start()
     End Sub
 

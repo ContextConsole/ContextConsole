@@ -8,9 +8,9 @@ Public Class MathController
     End Sub
 
     Public Sub Add()
-        Dim sumando1 = Interactor.AskInteger("First number")
-        Dim sumando2 = Interactor.AskInteger("Second number")
+        Dim n1 = Interactor.AskInteger("First number")
+        Dim n2 = Interactor.AskInteger("Second number")
 
-        Interactor.ShowMessage("Result = " & sumando1 + sumando2)
+        Interactor.ShowMessage("Result = " & n1 + n2)
     End Sub
 End Class

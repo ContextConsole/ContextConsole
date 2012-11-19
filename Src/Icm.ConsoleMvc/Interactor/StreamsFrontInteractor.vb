@@ -37,5 +37,15 @@ Public Class StreamsFrontInteractor
         Writer.WriteLine(New String("-"c, title.Length))
     End Sub
 
+    Private _promptSeparator As Char = ":"c
 
+    Public Overrides Function PromptSeparator() As Char
+        Return _promptSeparator
+    End Function
+
+    Public Function AskCommand(prompt As String) As String Implements IFrontInteractor.AskCommand
+        _promptSeparator = ">"c
+        AskCommand = AskString(prompt)
+        _promptSeparator = ":"c
+    End Function
 End Class

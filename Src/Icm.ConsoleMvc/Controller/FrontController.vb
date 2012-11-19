@@ -18,16 +18,13 @@ Public MustInherit Class FrontController
 
     Protected FrontInteractor As IFrontInteractor
 
-    Protected Sub New(ctlman As IControllerManager, asker As IFrontInteractor)
-        MyClass.New(ctlman, asker, New StandardTokenParser)
-    End Sub
 
     Protected Sub New(ctlman As IControllerManager, asker As IFrontInteractor, tokenParser As ITokenParser)
         MyBase.New(ctlman, asker)
         FrontInteractor = asker
         _tokenParser = tokenParser
         _controllers.Add(Me) ' First the front controller (so that its actions get presented first at help)
-        _controllers.AddRange(ctlman_.GetAllControllers())
+        _controllers.AddRange(_ctlman.GetAllControllers())
         _usedController = Me
 
         Dim environmentArgs = Environment.GetCommandLineArgs
@@ -76,10 +73,13 @@ Public MustInherit Class FrontController
         return Initialize()
     End Function
 
+    Protected Overridable Function CommandPrompt() As String
+        Return ""
+    End Function
 
     Private Function ExecuteCommand() As Boolean Implements IFrontController.ExecuteCommand
 
-        Dim command = Interactor.AskString(">")
+        Dim command = FrontInteractor.AskCommand(CommandPrompt)
         _tokenParser.Initialize()
         _tokenParser.Parse(command)
 

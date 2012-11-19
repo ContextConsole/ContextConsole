@@ -8,6 +8,10 @@ Imports Icm.Reflection
 Public MustInherit Class BaseInteractor
     Implements IInteractor
 
+    Protected Sub New()
+
+    End Sub
+
     Public Function AskString(ByVal prompt As String) As String Implements IInteractor.AskString
         Return AskString(prompt, Nothing, Nothing)
     End Function
@@ -131,5 +135,11 @@ Public MustInherit Class BaseInteractor
     Public MustOverride Sub ShowMessage(msg As String) Implements IInteractor.ShowMessage
 
     Public MustOverride Sub EnqueueToken(tok As String) Implements IInteractor.EnqueueToken
+
+    Public Sub ShowMessage1(fmt As String, ParamArray args() As Object) Implements IInteractor.ShowMessage
+        ShowMessage(String.Format(fmt, args))
+    End Sub
+
+    Public MustOverride Function PromptSeparator() As Char Implements IInteractor.PromptSeparator
 
 End Class

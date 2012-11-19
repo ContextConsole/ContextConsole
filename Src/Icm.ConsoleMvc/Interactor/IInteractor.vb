@@ -31,6 +31,9 @@ Public Interface IInteractor
     Sub ShowKeyedList(Of T As Class)(ByVal title As String, ByVal values As IEnumerable(Of T), ByVal key As Func(Of T, String), ByVal toString As Func(Of T, String))
     Sub ShowErrors(list As IEnumerable(Of String))
     Sub ShowMessage(msg As String)
+    Sub ShowMessage(fmt As String, ParamArray args() As Object)
 
     Sub EnqueueToken(tok As String)
+
+    Function PromptSeparator() As Char
 End Interface

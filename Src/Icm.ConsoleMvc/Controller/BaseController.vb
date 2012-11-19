@@ -8,21 +8,21 @@ Imports Icm.Reflection
 Public MustInherit Class BaseController
     Implements IController
 
-    Protected Friend ReadOnly ctlman_ As IControllerManager
+    Protected Friend ReadOnly _ctlman As IControllerManager
 
-    Property Interactor As IInteractor
+    Protected Property Interactor As IInteractor
 
     Protected Sub New(ctlman As IControllerManager, asker As IInteractor)
-        ctlman_ = ctlman
-        Me.Interactor = asker
+        _ctlman = ctlman
+        Interactor = asker
     End Sub
 
     Public Function GetActions() As System.Collections.Generic.IEnumerable(Of IAction) Implements IController.GetActions
-        Return ctlman_.GetActions(Me)
+        Return _ctlman.GetActions(Me)
     End Function
 
     Public Function Name() As String Implements IController.Name
-        Return ctlman_.GetName(Me)
+        Return _ctlman.GetName(Me)
     End Function
 
     Public Function GetAction(actionName As String) As IAction Implements IController.GetAction

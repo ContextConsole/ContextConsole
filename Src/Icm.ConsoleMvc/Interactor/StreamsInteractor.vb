@@ -9,7 +9,6 @@ Imports System.IO
 Public Class StreamsInteractor
     Inherits BaseInteractor
 
-
     Protected Shared Property TokenQueue As New Queue(Of String)
 
     Protected Property Reader As TextReader
@@ -58,7 +57,7 @@ Public Class StreamsInteractor
             response = TokenQueue.Dequeue
         Else
             If String.IsNullOrEmpty(defaultValue) Then
-                Writer.Write("{0}: ", prompt)
+                Writer.Write("{0}{1} ", prompt, PromptSeparator)
             Else
                 Writer.Write("{0} (default: {1}): ", prompt, defaultValue)
             End If
@@ -202,4 +201,7 @@ Public Class StreamsInteractor
         TokenQueue.Enqueue(tok)
     End Sub
 
+    Public Overrides Function PromptSeparator() As Char
+        Return ":"c
+    End Function
 End Class

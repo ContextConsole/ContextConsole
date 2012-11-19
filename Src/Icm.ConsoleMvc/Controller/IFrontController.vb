@@ -12,7 +12,7 @@
 Public Interface IFrontController
     Inherits IController
 
-    Function ShowTitles() As Boolean
+    Sub ShowTitles()
     Function InitializeApplication() As Boolean
     Function ExecuteCommand() As Boolean
 

@@ -5,7 +5,7 @@
 Public Interface IFrontInteractor
     Inherits IInteractor
 
-    Sub ShowTitles()
+    Sub ShowTitles(title As String)
     Function AskController(ByVal prompt As String, caller As IController) As IController
 
 End Interface

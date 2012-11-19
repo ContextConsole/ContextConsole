@@ -10,11 +10,11 @@ Public MustInherit Class BaseController
 
     Protected Friend ReadOnly ctlman_ As IControllerManager
 
-    Property Asker As IInteractor
+    Property Interactor As IInteractor
 
-    Public Sub New(ctlman As IControllerManager, asker As IInteractor)
+    Protected Sub New(ctlman As IControllerManager, asker As IInteractor)
         ctlman_ = ctlman
-        Me.Asker = asker
+        Me.Interactor = asker
     End Sub
 
     Public Function GetActions() As System.Collections.Generic.IEnumerable(Of IAction) Implements IController.GetActions

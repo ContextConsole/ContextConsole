@@ -32,7 +32,10 @@ Public Class StreamsFrontInteractor
     End Function
 
 
-    Public Sub ShowTitles() Implements IFrontInteractor.ShowTitles
-
+    Public Sub ShowTitles(title As String) Implements IFrontInteractor.ShowTitles
+        Writer.WriteLine(title)
+        Writer.WriteLine(New String("-"c, title.Length))
     End Sub
+
+
 End Class

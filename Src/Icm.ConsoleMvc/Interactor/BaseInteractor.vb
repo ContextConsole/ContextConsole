@@ -130,4 +130,6 @@ Public MustInherit Class BaseInteractor
 
     Public MustOverride Sub ShowMessage(msg As String) Implements IInteractor.ShowMessage
 
+    Public MustOverride Sub EnqueueToken(tok As String) Implements IInteractor.EnqueueToken
+
 End Class

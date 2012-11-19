@@ -9,6 +9,7 @@ Imports System.IO
 Public Class StreamsInteractor
     Inherits BaseInteractor
 
+
     Protected Shared Property TokenQueue As New Queue(Of String)
 
     Protected Property Reader As TextReader
@@ -196,4 +197,9 @@ Public Class StreamsInteractor
     Public Overrides Sub ShowMessage(msg As String)
         Writer.WriteLine(msg)
     End Sub
+
+    Public Overrides Sub EnqueueToken(tok As String)
+        TokenQueue.Enqueue(tok)
+    End Sub
+
 End Class

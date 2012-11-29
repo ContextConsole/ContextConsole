@@ -83,16 +83,27 @@ Public Class StreamsInteractor
     End Sub
 
     Public Overrides Function AskOneByKey(Of T As Class)(ByVal prompt As String, ByVal values As IEnumerable(Of T), key As Func(Of T, String), ByVal toString As Func(Of T, String), ByVal defaultValue As T, ByVal selectedList As List(Of T)) As T
-        If TokenQueue.Count = 0 Then
-            For i = 0 To values.Count - 1
-                If selectedList.Contains(values(i)) Then
-                    Writer.WriteLine(">{0}. {1}", key(values(i)), toString(values(i)))
+        Dim response As String
+        If values.Count = 0 Then
+            Throw New ArgumentException("Values collection cannot be empty")
+        End If
+        If defaultValue IsNot Nothing AndAlso Not values.Any(Function(obj) key(obj) = key(defaultValue)) Then
+            Throw New ArgumentException(String.Format("The default value (key {0}) cannot be found in the values collection", key(defaultValue)))
+        End If
+
+        If TokenQueue.Count <> 0 Then
+            response = TokenQueue.Dequeue
+        ElseIf values.Count = 1 Then
+            Return values.Single
+        Else
+            For Each value In values
+                If selectedList.Contains(value) Then
+                    Writer.WriteLine(">{0}. {1}", key(value), toString(value))
                 Else
-                    Writer.WriteLine(" {0}. {1}", key(values(i)), toString(values(i)))
+                    Writer.WriteLine(" {0}. {1}", key(value), toString(value))
                 End If
             Next
         End If
-        Dim response As String
         If defaultValue Is Nothing Then
             response = AskString(prompt)
         Else

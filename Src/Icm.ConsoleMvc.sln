@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "Icm.ConsoleMvc", "Icm.ConsoleMvc\Icm.ConsoleMvc.vbproj", "{9B76F4BD-5789-4318-AEAC-22D9AEBC91A0}"
 EndProject
-Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "Icm.ConsoleMvc.Tests", "Icm.ConsoleMvc.Tests\Icm.ConsoleMvc.Tests\Icm.ConsoleMvc.Tests.vbproj", "{B13F5CD0-AC1C-4340-8886-0328E32FE43B}"
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "Icm.ConsoleMvc.Tests", "Icm.ConsoleMvc.Tests\Icm.ConsoleMvc.Tests.vbproj", "{B13F5CD0-AC1C-4340-8886-0328E32FE43B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{F636AC69-9DFB-4E27-8F6B-92E3D16429FD}"
 	ProjectSection(SolutionItems) = preProject

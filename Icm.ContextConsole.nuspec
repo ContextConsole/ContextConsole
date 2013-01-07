@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>Icm.ContextConsole</id>
+    <version>1.1.2</version>
+    <title>ICM Context Console App Framework</title>
+    <authors>Ignacio Calvo Martínez</authors>
+    <owners>Ignacio Calvo Martínez</owners>
+    <licenseUrl>http://bitbucket.org/icalvo/icm.contextconsole</licenseUrl>
+    <projectUrl>http://bitbucket.org/icalvo/icm.contextconsole</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Framework for building interactive console application with hierarchical contexts, in the style of netsh.</description>
+    <releaseNotes />
+    <tags>Icm context console framework</tags>
+    <dependencies>
+      <dependency id="Ninject" version="3.0.1.10" />
+    </dependencies>
+  </metadata>
+</package>

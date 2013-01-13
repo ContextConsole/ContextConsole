@@ -1,9 +1,9 @@
-ï»¿Imports System
+Imports System
 Imports System.Reflection
 Imports System.Runtime.InteropServices
 
-' La informaciÃ³n general sobre un ensamblado se controla mediante el siguiente 
-' conjunto de atributos. Cambie estos atributos para modificar la informaciÃ³n
+' La información general sobre un ensamblado se controla mediante el siguiente 
+' conjunto de atributos. Cambie estos atributos para modificar la información
 ' asociada con un ensamblado.
 
 ' Revisar los valores de los atributos del ensamblado
@@ -12,7 +12,7 @@ Imports System.Runtime.InteropServices
 <Assembly: AssemblyDescription("")> 
 <Assembly: AssemblyCompany("")> 
 <Assembly: AssemblyProduct("Icm.ContextConsole.Tests")> 
-<Assembly: AssemblyCopyright("Copyright Â©  2012")> 
+<Assembly: AssemblyCopyright("Copyright ©  2012")> 
 <Assembly: AssemblyTrademark("")> 
 
 <Assembly: ComVisible(False)>
@@ -20,16 +20,16 @@ Imports System.Runtime.InteropServices
 'El siguiente GUID sirve como identificador de typelib si este proyecto se expone a COM
 <Assembly: Guid("2f8e616d-74de-44db-8f90-5dea87eee89e")> 
 
-' La informaciÃ³n de versiÃ³n de un ensamblado consta de los cuatro valores siguientes:
+' La información de versión de un ensamblado consta de los cuatro valores siguientes:
 '
-'      VersiÃ³n principal
-'      VersiÃ³n secundaria 
-'      NÃºmero de compilaciÃ³n
-'      RevisiÃ³n
+'      Versión principal
+'      Versión secundaria 
+'      Número de compilación
+'      Revisión
 '
-' Puede especificar todos los valores o usar los valores predeterminados de nÃºmero de compilaciÃ³n y de revisiÃ³n 
-' mediante el asterisco ('*'), como se muestra a continuaciÃ³n:
-' <Assembly: AssemblyVersion("1.0.*")> 
+' Puede especificar todos los valores o usar los valores predeterminados de número de compilación y de revisión 
+' mediante el asterisco ('*'), como se muestra a continuación:
+' <Assembly: AssemblyVersion("1.0.0")> 
 
-<Assembly: AssemblyVersion("1.0.0.0")> 
-<Assembly: AssemblyFileVersion("1.0.0.0")> 
+<Assembly: AssemblyVersion("1.0.0")> 
+<Assembly: AssemblyFileVersion("1.0.0")> 

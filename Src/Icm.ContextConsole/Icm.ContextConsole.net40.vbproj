@@ -22,7 +22,7 @@
     <DebugType>full</DebugType>
     <DefineDebug>true</DefineDebug>
     <DefineTrace>true</DefineTrace>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>bin\Debug\net40\</OutputPath>
     <DocumentationFile>Icm.ContextConsole.xml</DocumentationFile>
     <NoWarn>
     </NoWarn>
@@ -33,7 +33,7 @@
     <DefineDebug>false</DefineDebug>
     <DefineTrace>true</DefineTrace>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>bin\Release\net40\</OutputPath>
     <DocumentationFile>Icm.ContextConsole.xml</DocumentationFile>
     <NoWarn>
     </NoWarn>
@@ -55,9 +55,9 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Icm.Core">
-      <HintPath>..\packages\Icm.Core.1.1.2-beta3\lib\net40\Icm.Core.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Icm.Core, Version=1.1.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Icm.Core.1.1.2-beta5\lib\net40\Icm.Core.dll</HintPath>
     </Reference>
     <Reference Include="Ninject, Version=3.0.0.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -84,11 +84,12 @@
   <ItemGroup>
     <Compile Include="ApplicationFactory.vb" />
     <Compile Include="Application\IApplicationContext.vb" />
-    <Compile Include="ContextTree\IContextTreeBuilder.vb" />
-    <Compile Include="ContextTree\ReflectionContextTree.vb" />
-    <Compile Include="ContextTree\TypeContextTreeBuilder.vb" />
-    <Compile Include="ContextTree\SimpleContextTreeBuilder.vb" />
+    <Compile Include="ContextTreeBuilder\IContextTreeBuilder.vb" />
+    <Compile Include="ContextTreeBuilder\ReflectionContextTreeBuilder.vb" />
+    <Compile Include="ContextTreeBuilder\SimpleContextTreeBuilder.vb" />
+    <Compile Include="ContextTreeBuilder\TypeContextTreeBuilder.vb" />
     <Compile Include="Context\IActionFinder.vb" />
+    <Compile Include="Context\IContextExtensions.vb" />
     <Compile Include="Context\ReflectionActionFinder.vb" />
     <Compile Include="Interactor\BaseInteractor.vb" />
     <Compile Include="Context\BaseContext.vb" />

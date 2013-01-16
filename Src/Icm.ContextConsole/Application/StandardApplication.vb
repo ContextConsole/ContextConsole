@@ -1,6 +1,7 @@
 Imports Icm.Ninject
 Imports Icm.Localization
 Imports Icm.Collections
+Imports Icm.Tree
 
 Public Class StandardApplication
     Implements IApplication
@@ -137,7 +138,7 @@ Public Class StandardApplication
                 executionCtx = executionCtx.GetParent
                 i += 1
             Else
-                subctx = executionCtx.GetChildren.SingleOrDefault(Function(ctrl) ctrl.Value.IsNamed(contextName))
+                subctx = executionCtx.SingleOrDefault(Function(ctrl) ctrl.Value.IsNamed(contextName)).As(Of ITreeNode(Of IContext))()
                 If subctx IsNot Nothing Then
                     executionCtx = subctx
                     i += 1

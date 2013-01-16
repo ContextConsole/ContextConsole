@@ -1,6 +1,6 @@
 Imports Icm.Localization
 Imports System.Resources
-
+Imports Icm.Tree
 
 Public Module ApplicationFactory
 

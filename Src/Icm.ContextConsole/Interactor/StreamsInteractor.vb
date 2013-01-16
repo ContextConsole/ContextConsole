@@ -60,7 +60,10 @@ Public Class StreamsInteractor
         Return Reader.ReadLine
     End Function
 
-    Private Sub ShowListAux(ByVal title As String, ByVal list As IEnumerable(Of String))
+    Private Sub ShowListAux(ByVal title As String, ByVal list As IEnumerable(Of String), Optional hideIfEmpty As Boolean = False)
+        If hideIfEmpty AndAlso list.Count = 0 Then
+            Exit Sub
+        End If
         Writer.WriteLine()
         Writer.WriteLine(title)
         Writer.WriteLine(New String("-"c, title.Length))
@@ -69,12 +72,12 @@ Public Class StreamsInteractor
         Next
     End Sub
 
-    Public Overrides Sub ShowList(Of T As Class)(ByVal title As String, ByVal values As IEnumerable(Of T), ByVal toString As Func(Of T, String))
-        ShowListAux(title, values.Select(Function(item) toString(item)))
+    Public Overrides Sub ShowList(Of T As Class)(ByVal title As String, ByVal values As IEnumerable(Of T), ByVal toString As Func(Of T, String), Optional hideIfEmpty As Boolean = False)
+        ShowListAux(title, values.Select(Function(item) toString(item)), hideIfEmpty)
     End Sub
 
-    Public Overrides Sub ShowKeyedList(Of T As Class)(ByVal title As String, ByVal values As IEnumerable(Of T), key As Func(Of T, String), ByVal toString As Func(Of T, String))
-        ShowListAux(title, values.Select(Function(item) String.Format("{0}. {1}", key(item), toString(item))))
+    Public Overrides Sub ShowKeyedList(Of T As Class)(ByVal title As String, ByVal values As IEnumerable(Of T), key As Func(Of T, String), ByVal toString As Func(Of T, String), Optional hideIfEmpty As Boolean = False)
+        ShowListAux(title, values.Select(Function(item) String.Format("{0}. {1}", key(item), toString(item))), hideIfEmpty)
     End Sub
 
     Public Overrides Function AskOneByKey(Of T As Class)(ByVal prompt As String, ByVal values As IEnumerable(Of T), key As Func(Of T, String), ByVal toString As Func(Of T, String), ByVal defaultValue As T, ByVal selectedList As List(Of T)) As T
@@ -111,7 +114,10 @@ Public Class StreamsInteractor
         End If
     End Function
 
-    Public Overrides Sub ShowNumberedList(Of T As Class)(title As String, values As IEnumerable(Of T), toString As Func(Of T, String))
+    Public Overrides Sub ShowNumberedList(Of T As Class)(title As String, values As IEnumerable(Of T), toString As Func(Of T, String), Optional hideIfEmpty As Boolean = False)
+        If hideIfEmpty AndAlso values.Count = 0 Then
+            Exit Sub
+        End If
         Writer.WriteLine(title)
         Writer.WriteLine(New String("-"c, title.Length))
         For i = 1 To values.Count

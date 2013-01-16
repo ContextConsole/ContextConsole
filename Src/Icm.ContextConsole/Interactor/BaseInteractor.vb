@@ -101,21 +101,21 @@ Public MustInherit Class BaseInteractor
         ShowList(Of System.Reflection.PropertyInfo)(title, obj.GetType.GetProperties(), Curry2(Of System.Reflection.PropertyInfo, Object, String)(AddressOf GetPropertyDescription, obj))
     End Sub
 
-    Public Sub ShowList(Of T As Class)(ByVal title As String, ByVal values As IEnumerable(Of T)) Implements IInteractor.ShowList
-        ShowList(title, values, Function(obj) obj.ToString)
+    Public Sub ShowList(Of T As Class)(ByVal title As String, ByVal values As IEnumerable(Of T), Optional hideIfEmpty As Boolean = False) Implements IInteractor.ShowList
+        ShowList(title, values, Function(obj) obj.ToString, hideIfEmpty)
     End Sub
 
-    Public Sub ShowNumberedList(Of T As Class)(ByVal title As String, ByVal values As IEnumerable(Of T)) Implements IInteractor.ShowNumberedList
-        ShowNumberedList(title, values, Function(obj) obj.ToString)
+    Public Sub ShowNumberedList(Of T As Class)(ByVal title As String, ByVal values As IEnumerable(Of T), Optional hideIfEmpty As Boolean = False) Implements IInteractor.ShowNumberedList
+        ShowNumberedList(title, values, Function(obj) obj.ToString, hideIfEmpty)
     End Sub
 
-    Public Sub ShowKeyedList(Of T As Class)(ByVal title As String, ByVal values As IEnumerable(Of T), key As Func(Of T, String)) Implements IInteractor.ShowKeyedList
-        ShowKeyedList(title, values, key, Function(obj) obj.ToString)
+    Public Sub ShowKeyedList(Of T As Class)(ByVal title As String, ByVal values As IEnumerable(Of T), key As Func(Of T, String), Optional hideIfEmpty As Boolean = False) Implements IInteractor.ShowKeyedList
+        ShowKeyedList(title, values, key, Function(obj) obj.ToString, hideIfEmpty)
     End Sub
 
-    Public MustOverride Sub ShowList(Of T As Class)(ByVal title As String, ByVal values As IEnumerable(Of T), ByVal toString As Func(Of T, String)) Implements IInteractor.ShowList
-    Public MustOverride Sub ShowNumberedList(Of T As Class)(ByVal title As String, ByVal values As IEnumerable(Of T), ByVal toString As Func(Of T, String)) Implements IInteractor.ShowNumberedList
-    Public MustOverride Sub ShowKeyedList(Of T As Class)(ByVal title As String, ByVal values As IEnumerable(Of T), key As Func(Of T, String), ByVal toString As Func(Of T, String)) Implements IInteractor.ShowKeyedList
+    Public MustOverride Sub ShowList(Of T As Class)(ByVal title As String, ByVal values As IEnumerable(Of T), ByVal toString As Func(Of T, String), Optional hideIfEmpty As Boolean = False) Implements IInteractor.ShowList
+    Public MustOverride Sub ShowNumberedList(Of T As Class)(ByVal title As String, ByVal values As IEnumerable(Of T), ByVal toString As Func(Of T, String), Optional hideIfEmpty As Boolean = False) Implements IInteractor.ShowNumberedList
+    Public MustOverride Sub ShowKeyedList(Of T As Class)(ByVal title As String, ByVal values As IEnumerable(Of T), key As Func(Of T, String), ByVal toString As Func(Of T, String), Optional hideIfEmpty As Boolean = False) Implements IInteractor.ShowKeyedList
 
     Public Function AskOne(Of T As Class)(ByVal prompt As String, ByVal values As IEnumerable(Of T)) As T Implements IInteractor.AskOne
         Return AskOne(prompt, values, Function(obj) obj.ToString)

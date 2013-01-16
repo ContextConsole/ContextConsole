@@ -2,6 +2,7 @@ Imports Icm.Reflection
 Imports Icm.Collections
 Imports Icm.Localization
 Imports System.Resources
+Imports Icm.Tree
 
 Public Class StandardNinjectModule
     Inherits Global.Ninject.Modules.NinjectModule

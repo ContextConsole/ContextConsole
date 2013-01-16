@@ -1,5 +1,6 @@
 Imports Icm.Localization
 Imports Icm.Ninject
+Imports Icm.Tree
 
 Public Class TypeContextTreeBuilder
     Implements IContextTreeBuilder

@@ -1,4 +1,5 @@
 Imports Icm.Localization
+Imports Icm.Tree
 
 Public Interface IApplication
 

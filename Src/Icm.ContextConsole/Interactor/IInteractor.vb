@@ -29,12 +29,12 @@ Public Interface IInteractor
     Function AskCommand(ByVal prompt As String) As String
 
     Sub ShowProperties(Of T As Class)(ByVal title As String, ByVal obj As T)
-    Sub ShowList(Of T As Class)(ByVal title As String, ByVal values As IEnumerable(Of T))
-    Sub ShowNumberedList(Of T As Class)(ByVal title As String, ByVal values As IEnumerable(Of T))
-    Sub ShowKeyedList(Of T As Class)(ByVal title As String, ByVal values As IEnumerable(Of T), ByVal key As Func(Of T, String))
-    Sub ShowList(Of T As Class)(ByVal title As String, ByVal values As IEnumerable(Of T), ByVal toString As Func(Of T, String))
-    Sub ShowNumberedList(Of T As Class)(ByVal title As String, ByVal values As IEnumerable(Of T), ByVal toString As Func(Of T, String))
-    Sub ShowKeyedList(Of T As Class)(ByVal title As String, ByVal values As IEnumerable(Of T), ByVal key As Func(Of T, String), ByVal toString As Func(Of T, String))
+    Sub ShowList(Of T As Class)(ByVal title As String, ByVal values As IEnumerable(Of T), Optional hideIfEmpty As Boolean = False)
+    Sub ShowNumberedList(Of T As Class)(ByVal title As String, ByVal values As IEnumerable(Of T), Optional hideIfEmpty As Boolean = False)
+    Sub ShowKeyedList(Of T As Class)(ByVal title As String, ByVal values As IEnumerable(Of T), ByVal key As Func(Of T, String), Optional hideIfEmpty As Boolean = False)
+    Sub ShowList(Of T As Class)(ByVal title As String, ByVal values As IEnumerable(Of T), ByVal toString As Func(Of T, String), Optional hideIfEmpty As Boolean = False)
+    Sub ShowNumberedList(Of T As Class)(ByVal title As String, ByVal values As IEnumerable(Of T), ByVal toString As Func(Of T, String), Optional hideIfEmpty As Boolean = False)
+    Sub ShowKeyedList(Of T As Class)(ByVal title As String, ByVal values As IEnumerable(Of T), ByVal key As Func(Of T, String), ByVal toString As Func(Of T, String), Optional hideIfEmpty As Boolean = False)
     Sub ShowErrors(list As IEnumerable(Of String))
     Sub ShowMessage(msg As String)
 End Interface

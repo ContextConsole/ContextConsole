@@ -153,4 +153,8 @@
   <data name="use_prompt" xml:space="preserve">
     <value>Context (leave blank for Main)</value>
   </data>
+  <data name="root_use" xml:space="preserve">
+    <value>{0}: change to {0} subcontext</value>
+    <comment>root_use description</comment>
+  </data>
 </root>

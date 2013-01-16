@@ -1,6 +1,7 @@
 Imports System.Linq
 Imports Icm.Collections
 Imports Icm.Localization
+Imports Icm.Tree
 
 ''' <summary>
 ''' This base root context provides implementation of Help action and Quit action.
@@ -21,21 +22,23 @@ Public MustInherit Class RootContext
     End Sub
 
     Public Sub Help()
-        ShowActions(Me)
+        ' Actions of current context
+        ShowActions(Application.CurrentContextNode.Value)
+
+        ' Available subcontexts
         Interactor.ShowList(
             "Subcontexts",
-            Application.CurrentContextNode.GetChildren,
+            Application.CurrentContextNode,
             Function(ctx)
-                Return String.Format("{0}: change to {0} subcontext", _
+                Return String.Format(My.Resources.Resources.root_use, _
                         ctx.Value.Name.ToLower)
-            End Function)
+            End Function,
+            hideIfEmpty:=True)
 
-        For Each ctx In Application.CurrentContextNode.Ancestors
+        ' Inherited actions from ancestors
+        For Each ctx In Application.CurrentContextNode.ProperAncestors
             ShowActions(ctx)
         Next
-        'For Each ctl In Application.GetAllContexts
-        '    ShowActions(ctl)
-        'Next
     End Sub
 
     Public Sub Contexts()
@@ -76,7 +79,5 @@ Public MustInherit Class RootContext
             Return extLocRepo(action.LocalizationKey)
         End If
     End Function
-
-
 
 End Class

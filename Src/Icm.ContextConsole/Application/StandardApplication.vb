@@ -1,4 +1,3 @@
-Imports Icm.Ninject
 Imports Icm.Localization
 Imports Icm.Collections
 Imports Icm.Tree
@@ -31,8 +30,8 @@ Public Class StandardApplication
             New SimpleContextTreeBuilder(New TreeNode(Of IContext)(rootContext)),
             New StandardTokenParser,
             New StreamsInteractor,
-            New Icm.Localization.DictionaryLocalizationRepository,
-            New Icm.Localization.DictionaryLocalizationRepository)
+            New DictionaryLocalizationRepository,
+            New DictionaryLocalizationRepository)
     End Sub
 
     Public Sub New(rootContext As IContext, inter As IInteractor)
@@ -40,8 +39,8 @@ Public Class StandardApplication
             New SimpleContextTreeBuilder(New TreeNode(Of IContext)(rootContext)),
             New StandardTokenParser,
             inter,
-            New Icm.Localization.DictionaryLocalizationRepository,
-            New Icm.Localization.DictionaryLocalizationRepository)
+            New DictionaryLocalizationRepository,
+            New DictionaryLocalizationRepository)
     End Sub
 
     <Global.Ninject.Inject>
@@ -59,7 +58,7 @@ Public Class StandardApplication
             _tokenParser = tokenParser
         End If
         Me.Interactor = interactor
-        Me.InternalLocRepo = intLocRepo
+        InternalLocRepo = intLocRepo
         ExternalLocRepo = extLocRepo
 
         ' Stablish root context in the last place so that the IContext.Initialize routine

@@ -22,7 +22,7 @@
     <DebugType>full</DebugType>
     <DefineDebug>true</DefineDebug>
     <DefineTrace>true</DefineTrace>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>bin\Debug\net45\</OutputPath>
     <DocumentationFile>exm.xml</DocumentationFile>
     <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
     <Prefer32Bit>false</Prefer32Bit>
@@ -33,7 +33,7 @@
     <DefineDebug>false</DefineDebug>
     <DefineTrace>true</DefineTrace>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>bin\Release\net45\</OutputPath>
     <DocumentationFile>exm.xml</DocumentationFile>
     <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
     <Prefer32Bit>false</Prefer32Bit>
@@ -51,9 +51,9 @@
     <OptionInfer>On</OptionInfer>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Icm.Core, Version=1.1.2.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Icm.Core, Version=1.2.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Icm.Core.1.1.2-beta5\lib\net40\Icm.Core.dll</HintPath>
+      <HintPath>..\packages\Icm.Core.1.2.0\lib\net45\Icm.Core.dll</HintPath>
     </Reference>
     <Reference Include="Ninject, Version=3.0.0.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -120,9 +120,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Icm.ContextConsole\Icm.ContextConsole.net40.vbproj">
-      <Project>{9b76f4bd-5789-4318-aeac-22d9aebc91a0}</Project>
-      <Name>Icm.ConsoleMvc</Name>
+    <ProjectReference Include="..\Icm.ContextConsole\Icm.ContextConsole.net45.vbproj">
+      <Project>{9B76F4BD-5789-4318-AEAC-22D9AEBC91A0}</Project>
+      <Name>Icm.ContextConsole.net45</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />

@@ -1,7 +1,6 @@
-Imports System.Linq
-Imports Icm.Collections
-Imports Icm.Localization
 Imports Icm.Tree
+
+Imports Icm.Localization
 
 ''' <summary>
 ''' This base root context provides implementation of Help action and Quit action.
@@ -11,10 +10,6 @@ Public MustInherit Class RootContext
     Inherits BaseContext
 
     Private Application As IApplication
-
-    Public Sub New()
-
-    End Sub
 
     Protected Overrides Sub BaseInitialize(app As IApplication)
         MyBase.BaseInitialize(app)

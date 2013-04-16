@@ -1,15 +1,16 @@
 Imports Icm.Reflection
+Imports System.Reflection
 
 Public Class MethodInfoAction
     Implements IAction
 
-    Private ReadOnly _minfo As System.Reflection.MethodInfo
+    Private ReadOnly _minfo As MethodInfo
     Private _synonyms As List(Of String)
     Private ReadOnly _ctl As IContext
     Private ReadOnly _locKey As String
     Private ReadOnly _isInternal As Boolean
 
-    Public Sub New(minf As System.Reflection.MethodInfo, ctl As IContext)
+    Public Sub New(minf As MethodInfo, ctl As IContext)
         _minfo = minf
         _ctl = ctl
         _isInternal = minf.DeclaringType.Assembly Is Me.GetType.Assembly
@@ -54,7 +55,7 @@ Public Class MethodInfoAction
         _minfo.Invoke(_ctl, arguments)
     End Sub
 
-    Private Shared Function AskValue(parinfo As System.Reflection.ParameterInfo) As Object
+    Private Shared Function AskValue(parinfo As ParameterInfo) As Object
         ' TODO
         Throw New NotImplementedException("")
         'If parinfo.ParameterType Is GetType(String) Then

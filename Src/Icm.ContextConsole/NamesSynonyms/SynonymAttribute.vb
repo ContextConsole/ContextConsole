@@ -1,3 +1,7 @@
+''' <summary>
+''' This attribute provides synonyms for the given item.
+''' </summary>
+''' <remarks></remarks>
 Public Class SynonymAttribute
     Inherits Attribute
 

@@ -12,11 +12,13 @@ Public Class StandardApplication
 
     Protected Property TokenQueue As New Queue(Of String) Implements IApplication.TokenQueue
 
-    Public Property ExternalLocRepo As ILocalizationRepository Implements IApplication.ExternalLocRepo
+    Property ApplicationPrompt As String Implements IApplication.ApplicationPrompt
 
-    Public Property InternalLocRepo As ILocalizationRepository Implements IApplication.InternalLocRepo
+    Property ExternalLocRepo As ILocalizationRepository Implements IApplication.ExternalLocRepo
 
-    Public Property Interactor As IInteractor Implements IApplication.Interactor
+    Property InternalLocRepo As ILocalizationRepository Implements IApplication.InternalLocRepo
+
+    Property Interactor As IInteractor Implements IApplication.Interactor
         Get
             Return _interactor
         End Get
@@ -31,8 +33,8 @@ Public Class StandardApplication
             New SimpleContextTreeBuilder(New TreeNode(Of IContext)(rootContext)),
             New StandardTokenParser,
             New StreamsInteractor,
-            New Icm.Localization.DictionaryLocalizationRepository,
-            New Icm.Localization.DictionaryLocalizationRepository)
+            New DictionaryLocalizationRepository,
+            New DictionaryLocalizationRepository)
     End Sub
 
     Public Sub New(rootContext As IContext, inter As IInteractor)
@@ -40,8 +42,8 @@ Public Class StandardApplication
             New SimpleContextTreeBuilder(New TreeNode(Of IContext)(rootContext)),
             New StandardTokenParser,
             inter,
-            New Icm.Localization.DictionaryLocalizationRepository,
-            New Icm.Localization.DictionaryLocalizationRepository)
+            New DictionaryLocalizationRepository,
+            New DictionaryLocalizationRepository)
     End Sub
 
     <Global.Ninject.Inject>
@@ -61,7 +63,7 @@ Public Class StandardApplication
         Me.Interactor = interactor
         Me.InternalLocRepo = intLocRepo
         ExternalLocRepo = extLocRepo
-
+        ApplicationPrompt = System.Reflection.Assembly.GetEntryAssembly.CodeBase
         ' Stablish root context in the last place so that the IContext.Initialize routine
         ' can access the former application values.
         RootContextNode = treeBuilder.GetTree
@@ -104,9 +106,9 @@ Public Class StandardApplication
         ' Ask command line
         Dim command As String
         If CurrentContextNode Is RootContextNode Then
-            command = _Interactor.AskCommand("")
+            command = _interactor.AskCommand(ApplicationPrompt)
         Else
-            command = _Interactor.AskCommand(CurrentContext.Name)
+            command = _interactor.AskCommand(ApplicationPrompt & " " & CurrentContextNode.Ancestors.Reverse.Skip(1).Select(Function(node) node.Name).JoinStr(" "))
         End If
 
         ' Parse command line

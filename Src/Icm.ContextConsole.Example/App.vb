@@ -5,20 +5,22 @@ Imports Icm.Tree
 Public Module App
 
     Sub Main()
-        ApplicationFactory.Start(Of MainContext)(My.Resources.ResourceManager)
+        Dim app = ApplicationFactory.Create(Of MainContext)(My.Resources.ResourceManager)
 
-        Dim root As New TreeNode(Of Type)(GetType(MainContext))
+        app.ApplicationPrompt = "EXAMPLE"
+        Run(app)
 
+        'Dim root As New TreeNode(Of Type)(GetType(MainContext))
 
-        root.Add(Of MathContext) _
-                .Add(Of MathContext) _
-                    .Add(Of MathContext) _
-                    .Add(Of MathContext) _
-                    .Parent _
-                .Parent _
-            .Add(Of MathContext)()
+        'root.Add(Of MathContext) _
+        '        .Add(Of MathContext) _
+        '            .Add(Of MathContext) _
+        '            .Add(Of MathContext) _
+        '            .Parent _
+        '        .Parent _
+        '    .Add(Of MathContext)()
 
-        Dim sct As New TypeContextTreeBuilder(root)
+        'Dim sct As New TypeContextTreeBuilder(root)
 
     End Sub
 

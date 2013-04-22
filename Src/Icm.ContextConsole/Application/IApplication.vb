@@ -3,6 +3,8 @@ Imports Icm.Tree
 
 Public Interface IApplication
 
+    Property ApplicationPrompt As String
+
     Property CurrentContextNode As ITreeNode(Of IContext)
     Property RootContextNode As ITreeNode(Of IContext)
 

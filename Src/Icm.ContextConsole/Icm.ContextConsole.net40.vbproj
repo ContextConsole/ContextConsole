@@ -92,6 +92,7 @@
     <Compile Include="Context\ReflectionActionFinder.vb" />
     <Compile Include="Interactor\BaseInteractor.vb" />
     <Compile Include="Context\BaseContext.vb" />
+    <Compile Include="Interactor\IInteractorExtensions.vb" />
     <Compile Include="Interactor\StreamsInteractor.vb" />
     <Compile Include="Context\RootContext.vb" />
     <Compile Include="Action\IAction.vb" />
@@ -143,7 +144,9 @@
       <CustomToolNamespace>My</CustomToolNamespace>
       <LastGenOutput>Settings.Designer.vb</LastGenOutput>
     </None>
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />

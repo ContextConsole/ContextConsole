@@ -29,6 +29,7 @@
     </NoWarn>
     <WarningsAsErrors>41999,42016,42017,42018,42019,42020,42021,42022,42032,42036</WarningsAsErrors>
     <Prefer32Bit>false</Prefer32Bit>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -96,6 +97,7 @@
     <Compile Include="Context\ReflectionActionFinder.vb" />
     <Compile Include="Interactor\BaseInteractor.vb" />
     <Compile Include="Context\BaseContext.vb" />
+    <Compile Include="Interactor\IInteractorExtensions.vb" />
     <Compile Include="Interactor\StreamsInteractor.vb" />
     <Compile Include="Context\RootContext.vb" />
     <Compile Include="Action\IAction.vb" />

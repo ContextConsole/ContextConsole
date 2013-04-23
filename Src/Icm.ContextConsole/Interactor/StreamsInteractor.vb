@@ -72,11 +72,11 @@ Public Class StreamsInteractor
         Next
     End Sub
 
-    Public Overrides Sub ShowList(Of T As Class)(ByVal title As String, ByVal values As IEnumerable(Of T), ByVal toString As Func(Of T, String), Optional hideIfEmpty As Boolean = False)
+    Public Overrides Sub ShowList(Of T As Class)(ByVal title As String, ByVal values As IEnumerable(Of T), ByVal toString As Func(Of T, String), hideIfEmpty As Boolean)
         ShowListAux(title, values.Select(Function(item) toString(item)), hideIfEmpty)
     End Sub
 
-    Public Overrides Sub ShowKeyedList(Of T As Class)(ByVal title As String, ByVal values As IEnumerable(Of T), key As Func(Of T, String), ByVal toString As Func(Of T, String), Optional hideIfEmpty As Boolean = False)
+    Public Overrides Sub ShowKeyedList(Of T As Class)(ByVal title As String, ByVal values As IEnumerable(Of T), key As Func(Of T, String), ByVal toString As Func(Of T, String), hideIfEmpty As Boolean)
         ShowListAux(title, values.Select(Function(item) String.Format("{0}. {1}", key(item), toString(item))), hideIfEmpty)
     End Sub
 
@@ -114,7 +114,7 @@ Public Class StreamsInteractor
         End If
     End Function
 
-    Public Overrides Sub ShowNumberedList(Of T As Class)(title As String, values As IEnumerable(Of T), toString As Func(Of T, String), Optional hideIfEmpty As Boolean = False)
+    Public Overrides Sub ShowNumberedList(Of T As Class)(title As String, values As IEnumerable(Of T), toString As Func(Of T, String), hideIfEmpty As Boolean)
         If hideIfEmpty AndAlso values.Count = 0 Then
             Exit Sub
         End If

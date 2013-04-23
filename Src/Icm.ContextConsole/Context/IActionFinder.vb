@@ -1,7 +1,3 @@
-Imports System.Linq
-Imports Icm.Reflection
-Imports Icm.Localization
-Imports Icm.Ninject
 
 ''' <summary>
 ''' An Action Finder finds the actions a context implements

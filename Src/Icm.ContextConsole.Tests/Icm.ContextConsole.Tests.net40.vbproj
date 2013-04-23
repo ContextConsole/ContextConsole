@@ -48,8 +48,9 @@
     <OptionInfer>On</OptionInfer>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Icm.Core">
-      <HintPath>..\packages\Icm.Core.1.1.2\lib\net40\Icm.Core.dll</HintPath>
+    <Reference Include="Icm.Core, Version=1.2.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Icm.Core.1.2.0\lib\net40\Icm.Core.dll</HintPath>
     </Reference>
     <Reference Include="Moq, Version=4.0.10827.0, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -126,7 +127,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Icm.ContextConsole\Icm.ContextConsole.net40.vbproj">
       <Project>{9B76F4BD-5789-4318-AEAC-22D9AEBC91A0}</Project>
-      <Name>Icm.ConsoleMvc</Name>
+      <Name>Icm.ContextConsole.net40</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />

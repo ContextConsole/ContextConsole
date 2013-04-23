@@ -1,4 +1,3 @@
-Imports Icm.Ninject
 Imports Icm.Localization
 Imports Icm.Collections
 Imports Icm.Tree
@@ -61,7 +60,7 @@ Public Class StandardApplication
             _tokenParser = tokenParser
         End If
         Me.Interactor = interactor
-        Me.InternalLocRepo = intLocRepo
+        InternalLocRepo = intLocRepo
         ExternalLocRepo = extLocRepo
         ApplicationPrompt = System.Reflection.Assembly.GetEntryAssembly.CodeBase
         ' Stablish root context in the last place so that the IContext.Initialize routine

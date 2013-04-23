@@ -1,7 +1,11 @@
-Imports Icm.Localization
 Imports Icm.Ninject
 Imports Icm.Tree
 
+''' <summary>
+''' This builder accepts an already built tree of types.
+''' </summary>
+''' <remarks> The returned context tree instantiate each type on demand,
+''' based on the corresponding item of the type tree.</remarks>
 Public Class TypeContextTreeBuilder
     Implements IContextTreeBuilder
 

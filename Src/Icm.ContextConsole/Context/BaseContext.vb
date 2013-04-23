@@ -1,7 +1,4 @@
-Imports System.Linq
-Imports Icm.Reflection
 Imports Icm.Localization
-Imports Icm.Ninject
 
 ''' <summary>
 ''' A base context implements many of the methods of IContext based on 4 of them.

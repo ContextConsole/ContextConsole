@@ -1,9 +1,7 @@
-Imports System.Linq
-Imports Icm.Reflection
-Imports Icm.Localization
-Imports Icm.Ninject
-
-
+''' <summary>
+''' Finds actions by using reflection on the context.
+''' </summary>
+''' <remarks>It finds all public non-static parameterless procedures.</remarks>
 Public Class ReflectionActionFinder
     Implements IActionFinder
 

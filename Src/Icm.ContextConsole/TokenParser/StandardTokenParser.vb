@@ -1,5 +1,5 @@
 ''' <summary>
-''' 
+''' Standard parser
 ''' </summary>
 ''' <remarks>
 ''' The standard token parser separates tokens by spaces, but recognizes strings inside

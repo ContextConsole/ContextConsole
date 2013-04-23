@@ -2,6 +2,10 @@ Imports Icm.Localization
 Imports System.Resources
 Imports Icm.Tree
 
+''' <summary>
+''' Various methods for building and running an Icm.ContextConsole application.
+''' </summary>
+''' <remarks></remarks>
 Public Module ApplicationFactory
 
     Public Function Create(Of TMain As IContext)(locRepo As ILocalizationRepository) As IApplication

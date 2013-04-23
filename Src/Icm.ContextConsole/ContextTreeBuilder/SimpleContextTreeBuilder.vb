@@ -1,7 +1,11 @@
-Imports Icm.Localization
-Imports Icm.Ninject
 Imports Icm.Tree
 
+''' <summary>
+''' This tree builder does nothing, it returns the tree node given in the constructor.
+''' </summary>
+''' <remarks>
+''' This builder is useful for testing purposes or if you want to control the creation of your context tree.
+''' </remarks>
 Public Class SimpleContextTreeBuilder
     Implements IContextTreeBuilder
 

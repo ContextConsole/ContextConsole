@@ -34,7 +34,7 @@ Public MustInherit Class BaseInteractor
     Public Function AskString(prompt As String, validation As Func(Of String, Boolean), defaultValue As String) As String Implements IInteractor.AskString
         Dim response As String
         Do
-            response = AskString(prompt, defaultValue)
+            response = AskStringWithTokenQueue(prompt, defaultValue, ":")
             If String.IsNullOrEmpty(response) Then
                 Return defaultValue
             End If

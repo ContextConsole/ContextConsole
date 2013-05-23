@@ -62,7 +62,7 @@ Public Class StandardApplication
         Me.Interactor = interactor
         InternalLocRepo = intLocRepo
         ExternalLocRepo = extLocRepo
-        ApplicationPrompt = System.Reflection.Assembly.GetEntryAssembly.CodeBase
+        ApplicationPrompt = System.Reflection.Assembly.GetExecutingAssembly.CodeBase
         ' Stablish root context in the last place so that the IContext.Initialize routine
         ' can access the former application values.
         RootContextNode = treeBuilder.GetTree

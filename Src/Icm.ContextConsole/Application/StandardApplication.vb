@@ -131,27 +131,28 @@ Public Class StandardApplication
         Dim i = 0
 
         ' Context retrieval (recursive)
-        Dim executionCtx = CurrentContextNode
-        Dim subctx As ITreeNode(Of IContext) = Nothing
+        Dim executionCtxNode = CurrentContextNode
+        Dim nextCtxNode As ITreeNode(Of IContext) = Nothing
         Do
             Dim contextName = saTokens(i)
+
             If contextName = ".." Then
-                executionCtx = executionCtx.GetParent
+                nextCtxNode = executionCtxNode.GetParent
                 i += 1
             Else
-                subctx = executionCtx.SingleOrDefault(Function(ctrl) ctrl.Value.IsNamed(contextName)).As(Of ITreeNode(Of IContext))()
-                If subctx IsNot Nothing Then
-                    executionCtx = subctx
-                    i += 1
-                End If
+                nextCtxNode = executionCtxNode.GetChildNodes.SingleOrDefault(Function(ctrl) ctrl.Value.IsNamed(contextName)).As(Of ITreeNode(Of IContext))()
             End If
-        Loop Until subctx Is Nothing OrElse i = saTokens.Count
+            If nextCtxNode IsNot Nothing Then
+                executionCtxNode = nextCtxNode
+                i += 1
+            End If
+        Loop Until nextCtxNode Is Nothing OrElse i = saTokens.Count
 
         If i < saTokens.Count Then
             ' Action retrieval
             Dim actionName = saTokens(i).ToLower
             Dim action As IAction
-            Dim ancestorExecutionCtx = executionCtx
+            Dim ancestorExecutionCtx = executionCtxNode
             Do
                 action = ancestorExecutionCtx.Value.GetActions().GetNamedItem(actionName)
 
@@ -166,7 +167,7 @@ Public Class StandardApplication
             Loop
 
             If action Is Nothing Then
-                Interactor.ShowErrors({InternalLocRepo.TransF("executecommand_actionnotfound", actionName, executionCtx.Ancestors.Select(Function(ctx) ctx.Name).JoinStr(","))})
+                Interactor.ShowErrors({InternalLocRepo.TransF("executecommand_actionnotfound", actionName, executionCtxNode.Ancestors.Select(Function(ctx) ctx.Name).JoinStr(","))})
                 Return False
             Else
                 i += 1
@@ -178,8 +179,8 @@ Public Class StandardApplication
                 Return (action.Name = "quit")
             End If
         Else
-            Interactor.ShowMessage(InternalLocRepo.TransF("use_message", executionCtx.Value.Name))
-            CurrentContextNode = executionCtx
+            Interactor.ShowMessage(InternalLocRepo.TransF("use_message", executionCtxNode.Value.Name))
+            CurrentContextNode = executionCtxNode
             Return False
         End If
     End Function

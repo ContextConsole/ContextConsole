@@ -55,8 +55,10 @@ Public Class StandardNinjectModule
     End Sub
 
     Public Overrides Sub Load()
-        Bind(Of ILocalizationRepository).ToConstant(New ResourceLocalizationRepository(My.Resources.ResourceManager)).Named("ConsoleMvcInternalResources")
-        Bind(Of ILocalizationRepository).ToConstant(_initialLocRepo).Named("ConsoleMvcExternalResources")
+        Bind(Of ILocalizationRepository).ToConstant(New ResourceLocalizationRepository(My.Resources.ResourceManager)).WhenTargetHas(Of IcmContextConsoleLocalizationAttribute)()
+        If _initialLocRepo IsNot Nothing Then
+            Bind(Of ILocalizationRepository).ToConstant(_initialLocRepo)
+        End If
         Bind(Of IInteractor).To(Of StreamsInteractor).InSingletonScope()
         Bind(Of ITokenParser).To(Of StandardTokenParser).InSingletonScope()
         If _contextRootNode Is Nothing Then

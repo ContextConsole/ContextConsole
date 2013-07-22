@@ -23,7 +23,7 @@ Public MustInherit Class RootContext
         ' Available subcontexts
         Interactor.ShowList(
             "Subcontexts",
-            Application.CurrentContextNode,
+            Application.CurrentContextNode.GetChildNodes,
             Function(ctx)
                 Return String.Format(My.Resources.Resources.root_use, _
                         ctx.Value.Name.ToLower)

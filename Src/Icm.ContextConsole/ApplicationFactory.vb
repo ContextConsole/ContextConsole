@@ -8,6 +8,25 @@ Imports Icm.Tree
 ''' <remarks></remarks>
 Public Module ApplicationFactory
 
+    Public Function Create(Of TMain As IContext)() As IApplication
+        Return Create(GetType(TMain))
+    End Function
+
+    Public Function Create(fctlType As Type) As IApplication
+        Initialize(fctlType, locRepo:=Nothing, loadAllBackContexts:=True)
+        Return CreateApp()
+    End Function
+
+    Public Function Create(fctl As IContext) As IApplication
+        Initialize(fctl, locRepo:=Nothing, loadAllBackContexts:=True)
+        Return CreateApp()
+    End Function
+
+    Public Function Create(fctl As ITreeNode(Of IContext)) As IApplication
+        Initialize(fctl, locRepo:=Nothing)
+        Return CreateApp()
+    End Function
+
     Public Function Create(Of TMain As IContext)(locRepo As ILocalizationRepository) As IApplication
         Initialize(GetType(TMain), locRepo, True)
         Return CreateApp()
@@ -58,35 +77,27 @@ Public Module ApplicationFactory
 
     Public Sub Initialize(
                           frontContextType As Type,
-                          initialLocRepo As ILocalizationRepository,
-                          loadAllBackContexts As Boolean,
-                          ParamArray additionalModules() As Global.Ninject.Modules.INinjectModule)
-        Icm.Ninject.Kernel.Load({New StandardNinjectModule(initialLocRepo, loadAllBackContexts, frontContextType)})
-        Icm.Ninject.Kernel.Load(additionalModules)
+                          locRepo As ILocalizationRepository,
+                          loadAllBackContexts As Boolean)
+        Icm.Ninject.Kernel.Load({New StandardNinjectModule(locRepo, loadAllBackContexts, frontContextType)})
     End Sub
 
     Public Sub Initialize(
                           frontContext As IContext,
-                          initialLocRepo As ILocalizationRepository,
-                          loadAllBackContexts As Boolean,
-                          ParamArray additionalModules() As Global.Ninject.Modules.INinjectModule)
-        Icm.Ninject.Kernel.Load({New StandardNinjectModule(initialLocRepo, loadAllBackContexts, FrontContext)})
-        Icm.Ninject.Kernel.Load(additionalModules)
+                          locRepo As ILocalizationRepository,
+                          loadAllBackContexts As Boolean)
+        Icm.Ninject.Kernel.Load({New StandardNinjectModule(locRepo, loadAllBackContexts, frontContext)})
     End Sub
 
     Public Sub Initialize(
-                          contextTree As ITreeNode(Of IContext),
-                          ParamArray additionalModules() As Global.Ninject.Modules.INinjectModule)
+                          contextTree As ITreeNode(Of IContext))
         Icm.Ninject.Kernel.Load({New StandardNinjectModule(contextTree)})
-        Icm.Ninject.Kernel.Load(additionalModules)
     End Sub
 
     Public Sub Initialize(
                           contextTree As ITreeNode(Of IContext),
-                          initialLocRepo As ILocalizationRepository,
-                          ParamArray additionalModules() As Global.Ninject.Modules.INinjectModule)
-        Icm.Ninject.Kernel.Load({New StandardNinjectModule(initialLocRepo, contextTree)})
-        Icm.Ninject.Kernel.Load(additionalModules)
+                          locRepo As ILocalizationRepository)
+        Icm.Ninject.Kernel.Load({New StandardNinjectModule(locRepo, contextTree)})
     End Sub
 
     Public Function CreateApp() As IApplication

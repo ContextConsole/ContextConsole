@@ -19,19 +19,19 @@ Public Module StreamsInteractorHelper
     End Function
 
     Public Function BuildInteractor(input As IEnumerable(Of String)) As StreamsInteractor
-        Return New StreamsInteractor(TextReaderFactory.FromString(GetInputstring(input)), New StringWriter, New StringWriter, New Queue(Of String))
+        Return New StreamsInteractor(New Icm.Localization.DictionaryLocalizationRepository, TextReaderFactory.FromString(GetInputstring(input)), New StringWriter, New StringWriter, New Queue(Of String))
     End Function
 
     Public Function BuildInteractor(input As IEnumerable(Of String),
         output As StringWriter,
         errorstr As StringWriter) As StreamsInteractor
-        Return New StreamsInteractor(TextReaderFactory.FromString(GetInputstring(input)), output, errorstr, New Queue(Of String))
+        Return New StreamsInteractor(New Icm.Localization.DictionaryLocalizationRepository, TextReaderFactory.FromString(GetInputstring(input)), output, errorstr, New Queue(Of String))
     End Function
 
     Public Function BuildInteractor(input As IEnumerable(Of String),
         output As StringWriter,
         errorstr As StringWriter,
         tokenQueue As Queue(Of String)) As StreamsInteractor
-        Return New StreamsInteractor(TextReaderFactory.FromString(GetInputstring(input)), output, errorstr, tokenQueue)
+        Return New StreamsInteractor(New Icm.Localization.DictionaryLocalizationRepository, TextReaderFactory.FromString(GetInputstring(input)), output, errorstr, tokenQueue)
     End Function
 End Module

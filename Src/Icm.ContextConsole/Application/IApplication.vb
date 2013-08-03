@@ -5,18 +5,16 @@ Public Interface IApplication
 
     Property ApplicationPrompt As String
 
-    Property CurrentContextNode As ITreeNode(Of IContext)
-    Property RootContextNode As ITreeNode(Of IContext)
+    ReadOnly Property CurrentContextNode As ITreeNode(Of IContext)
+    ReadOnly Property RootContextNode As ITreeNode(Of IContext)
 
     Function GetAllContexts() As IEnumerable(Of IContext)
 
     Function ExecuteCommand() As Boolean
 
-    Property TokenQueue As Queue(Of String)
+    ReadOnly Property Interactor As IInteractor
 
-    Property Interactor As IInteractor
-
-    Property InternalLocRepo As ILocalizationRepository
-    Property ExternalLocRepo As ILocalizationRepository
+    ReadOnly Property InternalLocRepo As ILocalizationRepository
+    ReadOnly Property ExternalLocRepo As ILocalizationRepository
 
 End Interface

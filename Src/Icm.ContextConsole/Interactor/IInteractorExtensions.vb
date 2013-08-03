@@ -1,5 +1,5 @@
 Imports System.Runtime.CompilerServices
-
+Imports Icm.Ninject.KernelContainer
 
 Public Module IInteractorExtensions
 
@@ -97,5 +97,78 @@ Public Module IInteractorExtensions
     Sub ShowKeyedList(Of T As Class)(interactor As IInteractor, ByVal title As String, ByVal values As IEnumerable(Of T), ByVal key As Func(Of T, String), Optional hideIfEmpty As Boolean = False)
         interactor.ShowKeyedList(title, values, key, Function(obj) obj.ToString, hideIfEmpty)
     End Sub
+
+
+    Private Function IsBoolean(s As String) As Boolean
+        Return {"0", "1", "true", "false"}.Contains(s.ToLower)
+    End Function
+
+    <Extension>
+    Public Function AskBoolean(interactor As IInteractor, ByVal prompt As String, ByVal defaultValue As Boolean?) As Boolean?
+        Dim response = interactor.AskString(prompt, AddressOf IsBoolean, If(defaultValue.HasValue, CStr(defaultValue.Value), ""))
+        If String.IsNullOrEmpty(response) Then
+            Return defaultValue
+        Else
+            Return CBool(response)
+        End If
+    End Function
+
+    <Extension>
+    Public Function AskContext(interactor As IInteractor, ByVal prompt As String, caller As IContext, contexts As IEnumerable(Of IContext)) As IContext
+        If contexts Is Nothing Then
+            Dim ctls = New List(Of IContext)
+
+            ctls.Add(Instance(Of IContext))
+            ctls.AddRange(Instances(Of IContext))
+            contexts = ctls
+        End If
+
+        Dim contextName = interactor.AskString(prompt)
+
+        Dim ctl As IContext
+#If Framework = "net35" Then
+        If String.IsNullOrEmpty(contextName.Trim) Then
+#Else
+        If String.IsNullOrWhiteSpace(contextName) Then
+#End If
+            Return caller
+        Else
+            ctl = contexts.SingleOrDefault(Function(ctrl) _
+                                                   ctrl.Name = contextName OrElse _
+                                                   ctrl.Synonyms().Contains(contextName))
+        End If
+
+        If ctl Is Nothing Then
+            interactor.ShowErrors({String.Format("Could not find context {0}", contextName)})
+            Return Nothing
+        Else
+            Return ctl
+        End If
+    End Function
+
+    <Extension>
+    Public Function AskInteger(interactor As IInteractor, ByVal prompt As String, ByVal defaultValue As Integer?) As Integer?
+        Return interactor.AskLiteral(Of Integer?)(prompt, Function(obj) CInt(obj), defaultValue)
+    End Function
+
+    <Extension>
+    Public Function AskLiteral(Of T)(interactor As IInteractor, ByVal prompt As String, convert As Func(Of String, T), ByVal defaultValue As T) As T
+        Dim response = interactor.AskString(prompt, AddressOf IsNumeric, If(defaultValue IsNot Nothing, defaultValue.ToString, ""))
+        If String.IsNullOrEmpty(response) Then
+            Return defaultValue
+        Else
+            Return convert(response)
+        End If
+    End Function
+
+    <Extension>
+    Public Function AskDate(interactor As IInteractor, ByVal prompt As String, ByVal defaultValue As Date?) As Date?
+        Dim response = interactor.AskString(prompt, AddressOf IsDate, If(defaultValue.HasValue, CStr(defaultValue.Value), ""))
+        If String.IsNullOrEmpty(response) Then
+            Return defaultValue
+        Else
+            Return CDate(response)
+        End If
+    End Function
 
 End Module

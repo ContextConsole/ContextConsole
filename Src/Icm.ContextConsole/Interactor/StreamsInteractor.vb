@@ -1,6 +1,7 @@
 Imports System.IO
 Imports Icm.Collections
-
+Imports Icm.Localization
+Imports Icm.Tree
 
 ''' <summary>
 ''' Implementation of BaseInteractor using <see cref="TextReader">TextReaders</see> for input and
@@ -8,7 +9,7 @@ Imports Icm.Collections
 ''' </summary>
 ''' <remarks></remarks>
 Public Class StreamsInteractor
-    Inherits BaseInteractor
+    Implements IInteractor
 
     Protected Property Reader As TextReader
     Protected Property Writer As TextWriter
@@ -16,6 +17,15 @@ Public Class StreamsInteractor
 
     Private _indentLevel As Integer
     Private _indentString As String = ""
+
+    Protected locRepo As ILocalizationRepository
+
+    Property PromptSeparator As String = ": " Implements IInteractor.PromptSeparator
+
+    Property TokenQueue As Queue(Of String) Implements IInteractor.TokenQueue
+
+
+    Property CommandPromptSeparator As String = "> " Implements IInteractor.CommandPromptSeparator
 
     Public Sub New()
         MyBase.New()
@@ -34,6 +44,53 @@ Public Class StreamsInteractor
         Me.TokenQueue = tokenQueue
     End Sub
 
+    Public Sub New(locRepo As ILocalizationRepository, inputtr As TextReader, outputtw As TextWriter, errortw As TextWriter, tokenQueue As Queue(Of String))
+        MyBase.New()
+
+        Reader = inputtr
+        Writer = outputtw
+        ErrorWriter = errortw
+        Me.TokenQueue = tokenQueue
+        Me.locRepo = locRepo
+    End Sub
+
+
+    Sub SetLocalizationRepo(locRepo As ILocalizationRepository) Implements IInteractor.SetLocalizationRepo
+        Me.locRepo = locRepo
+    End Sub
+
+
+    Public Function AskCommand(prompt As String) As String Implements IInteractor.AskCommand
+        Return AskStringWithTokenQueue(prompt, Nothing, CommandPromptSeparator)
+    End Function
+
+    Private Function AskStringWithTokenQueue(ByVal prompt As String, ByVal defaultValue As String, promptSeparator As String) As String
+        Dim response As String
+        If TokenQueue.Count <> 0 Then
+            response = TokenQueue.Dequeue
+        Else
+            response = AskStringWithoutTokenQueue(prompt, defaultValue, promptSeparator)
+        End If
+        Return response
+    End Function
+
+    Public Function AskString(prompt As String, validation As Func(Of String, Boolean), defaultValue As String) As String Implements IInteractor.AskString
+        Dim response As String
+        Do
+            response = AskStringWithTokenQueue(prompt, defaultValue, ":")
+            If String.IsNullOrEmpty(response) Then
+                Return defaultValue
+            End If
+            If validation Is Nothing Then
+                Exit Do
+            ElseIf validation.Invoke(response) Then
+                Exit Do
+            End If
+        Loop
+
+        Return response
+    End Function
+
     Property IndentLevel As Integer
         Get
             Return _indentLevel
@@ -51,7 +108,7 @@ Public Class StreamsInteractor
 
     End Property
 
-    Protected Overrides Function AskStringWithoutTokenQueue(prompt As String, defaultValue As String, promptSeparator As String) As String
+    Protected Function AskStringWithoutTokenQueue(prompt As String, defaultValue As String, promptSeparator As String) As String
         If String.IsNullOrEmpty(defaultValue) Then
             Writer.Write("{0}{1}", prompt, promptSeparator)
         Else
@@ -72,15 +129,35 @@ Public Class StreamsInteractor
         Next
     End Sub
 
-    Public Overrides Sub ShowList(Of T As Class)(ByVal title As String, ByVal values As IEnumerable(Of T), ByVal toString As Func(Of T, String), hideIfEmpty As Boolean)
+    Public Sub ShowList(Of T As Class)(ByVal title As String, ByVal values As IEnumerable(Of T), ByVal toString As Func(Of T, String), hideIfEmpty As Boolean) Implements IInteractor.ShowList
         ShowListAux(title, values.Select(Function(item) toString(item)), hideIfEmpty)
     End Sub
 
-    Public Overrides Sub ShowKeyedList(Of T As Class)(ByVal title As String, ByVal values As IEnumerable(Of T), key As Func(Of T, String), ByVal toString As Func(Of T, String), hideIfEmpty As Boolean)
-        ShowListAux(title, values.Select(Function(item) String.Format("{0}. {1}", key(item), toString(item))), hideIfEmpty)
+    Private Sub WriteList(Of T As Class)(ByVal values As IEnumerable(Of T), ByVal key As Func(Of T, String), ByVal toString As Func(Of T, String), ByVal selectedList As List(Of T))
+        If selectedList Is Nothing Then
+            For Each value In values
+                Writer.Write(GetListItem(value, key, toString, selected:=False))
+            Next
+        Else
+            For Each value In values
+                Writer.Write(GetListItem(value, key, toString, selected:=selectedList.Contains(value)))
+            Next
+        End If
     End Sub
 
-    Public Overrides Function AskOneByKey(Of T As Class)(ByVal prompt As String, ByVal values As IEnumerable(Of T), key As Func(Of T, String), ByVal toString As Func(Of T, String), ByVal defaultValue As T, ByVal selectedList As List(Of T)) As T
+    Public Sub ShowKeyedList(Of T As Class)(ByVal title As String, ByVal values As IEnumerable(Of T), key As Func(Of T, String), ByVal toString As Func(Of T, String), hideIfEmpty As Boolean) Implements IInteractor.ShowKeyedList
+        ShowListAux(title, values.Select(Function(item) GetListItem(item, key, toString, selected:=False)), hideIfEmpty)
+    End Sub
+
+    Private Function GetListItem(Of T As Class)(ByVal value As T, ByVal key As Func(Of T, String), ByVal toString As Func(Of T, String), ByVal selected As Boolean) As String
+        If selected Then
+            Return String.Format(">{0}. {1}", key(value), toString(value))
+        Else
+            Return String.Format(" {0}. {1}", key(value), toString(value))
+        End If
+    End Function
+
+    Public Function AskOneByKey(Of T As Class)(ByVal prompt As String, ByVal values As IEnumerable(Of T), key As Func(Of T, String), ByVal toString As Func(Of T, String), ByVal defaultValue As T, ByVal selectedList As List(Of T)) As T Implements IInteractor.AskOneByKey
         Dim response As String
         If values.Count = 0 Then
             Throw New ArgumentException("Values collection cannot be empty")
@@ -94,18 +171,12 @@ Public Class StreamsInteractor
         ElseIf values.Count = 1 Then
             Return values.Single
         Else
-            For Each value In values
-                If selectedList.Contains(value) Then
-                    Writer.WriteLine(">{0}. {1}", key(value), toString(value))
-                Else
-                    Writer.WriteLine(" {0}. {1}", key(value), toString(value))
-                End If
-            Next
-        End If
-        If defaultValue Is Nothing Then
-            response = AskString(prompt)
-        Else
-            response = AskString(prompt, key(defaultValue))
+            WriteList(values, key, toString, selectedList)
+            If defaultValue Is Nothing Then
+                response = AskString(prompt)
+            Else
+                response = AskString(prompt, key(defaultValue))
+            End If
         End If
         If response IsNot Nothing Then
             Return values.Single(Function(obj) key(obj) = response)
@@ -114,25 +185,25 @@ Public Class StreamsInteractor
         End If
     End Function
 
-    Public Overrides Sub ShowNumberedList(Of T As Class)(title As String, values As IEnumerable(Of T), toString As Func(Of T, String), hideIfEmpty As Boolean)
+    Public Sub ShowNumberedList(Of T As Class)(title As String, values As IEnumerable(Of T), toString As Func(Of T, String), hideIfEmpty As Boolean) Implements IInteractor.ShowNumberedList
         If hideIfEmpty AndAlso values.Count = 0 Then
             Exit Sub
         End If
         Writer.WriteLine(title)
         Writer.WriteLine(New String("-"c, title.Length))
         For i = 1 To values.Count
-            Writer.WriteLine("{0}. {1}", i, toString(values(i - 1)))
+            Dim iFor = i
+            Writer.WriteLine(GetListItem(values(i - 1), Function(obj) iFor.ToString, toString, selected:=False))
         Next
     End Sub
 
-    Public Overrides Function AskOne(Of T As Class)(prompt As String, values As IEnumerable(Of T), toString As Func(Of T, String), defaultValue As T, selectedList As List(Of T)) As T
+    Public Function AskOne(Of T As Class)(prompt As String, values As IEnumerable(Of T), toString As Func(Of T, String), defaultValue As T, selectedList As List(Of T)) As T Implements IInteractor.AskOne
         Dim defaultIndex As Integer? = Nothing
         For i = 1 To values.Count
-            If selectedList.Contains(values(i - 1)) Then
-                Writer.WriteLine(">{0}. {1}", i, toString(values(i - 1)))
-            Else
-                Writer.WriteLine(" {0}. {1}", i, toString(values(i - 1)))
-            End If
+            Dim iFor = i
+            Dim value = values(i - 1)
+            Dim key = Function(obj As T) iFor.ToString
+            WriteList(values, key, toString, selectedList)
             If defaultValue Is values(i - 1) Then
                 defaultIndex = i
             End If
@@ -145,7 +216,7 @@ Public Class StreamsInteractor
         End If
     End Function
 
-    Public Overrides Function AskMany(Of T As Class)(generalPrompt As String, prompt As String, values As IEnumerable(Of T), toString As Func(Of T, String), initialList As List(Of T)) As List(Of T)
+    Public Function AskMany(Of T As Class)(generalPrompt As String, prompt As String, values As IEnumerable(Of T), toString As Func(Of T, String), initialList As List(Of T)) As List(Of T) Implements IInteractor.AskMany
         Dim result = initialList
         Writer.WriteLine(generalPrompt)
         Do
@@ -160,7 +231,7 @@ Public Class StreamsInteractor
         Loop
     End Function
 
-    Public Overrides Function GetPropertyDescription(pi As System.Reflection.PropertyInfo, obj As Object) As String
+    Private Function GetPropertyDescription(pi As System.Reflection.PropertyInfo, obj As Object) As String Implements IInteractor.GetPropertyDescription
         Dim result As String
         Dim value As String
         If pi.GetIndexParameters.Count > 0 Then
@@ -198,16 +269,15 @@ Public Class StreamsInteractor
         Return result
     End Function
 
-    Public Overrides Sub ShowErrors(list As IEnumerable(Of String))
+    Public Sub ShowErrors(list As IEnumerable(Of String)) Implements IInteractor.ShowErrors
         For Each errorString In list
             ErrorWriter.WriteLine(errorString)
         Next
         ErrorWriter.WriteLine()
     End Sub
 
-    Public Overrides Sub ShowMessage(msg As String)
+    Public Sub ShowMessage(msg As String) Implements IInteractor.ShowMessage
         Writer.WriteLine(msg)
     End Sub
-
 
 End Class

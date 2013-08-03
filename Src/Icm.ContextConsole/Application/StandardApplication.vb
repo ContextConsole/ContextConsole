@@ -4,27 +4,32 @@ Imports Icm.Tree
 
 Public Class StandardApplication
     Implements IApplication
-    Private Dim _interactor As IInteractor
+    Private ReadOnly _internalLocRepo As ILocalizationRepository
+    Private ReadOnly _externalLocRepo As ILocalizationRepository
+    Private ReadOnly _interactor As IInteractor
+    Private _currentContextNode As ITreeNode(Of IContext)
     Private _rootContextNode As ITreeNode(Of IContext)
     Private _contextsCache As IEnumerable(Of IContext)
     Private ReadOnly _tokenParser As ITokenParser
 
-    Protected Property TokenQueue As New Queue(Of String) Implements IApplication.TokenQueue
-
     Property ApplicationPrompt As String Implements IApplication.ApplicationPrompt
 
-    Property ExternalLocRepo As ILocalizationRepository Implements IApplication.ExternalLocRepo
+    ReadOnly Property ExternalLocRepo() As ILocalizationRepository Implements IApplication.ExternalLocRepo
+        Get
+            Return _externalLocRepo
+        End Get
+    End Property
 
-    Property InternalLocRepo As ILocalizationRepository Implements IApplication.InternalLocRepo
+    ReadOnly Property InternalLocRepo() As ILocalizationRepository Implements IApplication.InternalLocRepo
+        Get
+            Return _internalLocRepo
+        End Get
+    End Property
 
-    Property Interactor As IInteractor Implements IApplication.Interactor
+    ReadOnly Property Interactor() As IInteractor Implements IApplication.Interactor
         Get
             Return _interactor
         End Get
-        Set(ByVal value As IInteractor)
-            _interactor = value
-            _interactor.TokenQueue = TokenQueue
-        End Set
     End Property
 
     Public Sub New(rootContext As IContext)
@@ -34,6 +39,7 @@ Public Class StandardApplication
             New StreamsInteractor,
             New DictionaryLocalizationRepository,
             New DictionaryLocalizationRepository)
+        Interactor.SetLocalizationRepo(InternalLocRepo)
     End Sub
 
     Public Sub New(rootContext As IContext, inter As IInteractor)
@@ -50,8 +56,8 @@ Public Class StandardApplication
                   treeBuilder As IContextTreeBuilder,
                   tokenParser As ITokenParser,
                   interactor As IInteractor,
-                  <Global.Ninject.Named("ConsoleMvcInternalResources")> intLocRepo As ILocalizationRepository,
-                  <Global.Ninject.Named("ConsoleMvcExternalResources")> extLocRepo As ILocalizationRepository
+                  <IcmContextConsoleLocalization> intLocRepo As ILocalizationRepository,
+                  extLocRepo As ILocalizationRepository
                   )
 
         If tokenParser Is Nothing Then
@@ -59,13 +65,13 @@ Public Class StandardApplication
         Else
             _tokenParser = tokenParser
         End If
-        Me.Interactor = interactor
-        InternalLocRepo = intLocRepo
-        ExternalLocRepo = extLocRepo
+        _interactor = interactor
+        _internalLocRepo = intLocRepo
+        _externalLocRepo = extLocRepo
         ApplicationPrompt = System.Reflection.Assembly.GetExecutingAssembly.CodeBase
         ' Stablish root context in the last place so that the IContext.Initialize routine
         ' can access the former application values.
-        RootContextNode = treeBuilder.GetTree
+        SetRootContextNode(treeBuilder.GetTree)
 
     End Sub
 
@@ -75,23 +81,28 @@ Public Class StandardApplication
         End Get
     End Property
 
-    Public Property CurrentContextNode As ITreeNode(Of IContext) Implements IApplication.CurrentContextNode
+    ReadOnly Property CurrentContextNode() As ITreeNode(Of IContext) Implements IApplication.CurrentContextNode
+        Get
+            Return _currentContextNode
+        End Get
+    End Property
 
 
-    Property RootContextNode() As ITreeNode(Of IContext) Implements IApplication.RootContextNode
+    Private Sub SetRootContextNode(value As ITreeNode(Of IContext))
+        If Not _rootContextNode Is value Then
+            ' Give reference to the application to all the contexts
+            For Each ctl In value.DepthPreorderTraverse()
+                ctl.Initialize(Me)
+            Next
+            _rootContextNode = value
+        End If
+        _currentContextNode = value
+    End Sub
+
+    ReadOnly Property RootContextNode() As ITreeNode(Of IContext) Implements IApplication.RootContextNode
         Get
             Return _rootContextNode
         End Get
-        Set(value As ITreeNode(Of IContext))
-            If Not _rootContextNode Is value Then
-                ' Give reference to the application to all the contexts
-                For Each ctl In value.DepthPreorderTraverse()
-                    ctl.Initialize(Me)
-                Next
-                _rootContextNode = value
-            End If
-            CurrentContextNode = value
-        End Set
     End Property
 
     Public Function GetAllContexts() As IEnumerable(Of IContext) Implements IApplication.GetAllContexts
@@ -105,9 +116,9 @@ Public Class StandardApplication
         ' Ask command line
         Dim command As String
         If CurrentContextNode Is RootContextNode Then
-            command = _interactor.AskCommand(ApplicationPrompt)
+            command = Interactor.AskCommand(ApplicationPrompt)
         Else
-            command = _interactor.AskCommand(ApplicationPrompt & " " & CurrentContextNode.Ancestors.Reverse.Skip(1).Select(Function(node) node.Name).JoinStr(" "))
+            command = Interactor.AskCommand(ApplicationPrompt & " " & CurrentContextNode.Ancestors.Reverse.Skip(1).Select(Function(node) node.Name).JoinStr(" "))
         End If
 
         ' Parse command line
@@ -115,7 +126,7 @@ Public Class StandardApplication
         _tokenParser.Parse(command)
 
         If _tokenParser.Errors.Count > 0 Then
-            _Interactor.ShowErrors(_tokenParser.Errors.Select(
+            Interactor.ShowErrors(_tokenParser.Errors.Select(
                                   Function(parseErr)
                                       Return InternalLocRepo.TransF("executecommand_parseerror", parseErr.Index, parseErr.StartIndex)
                                   End Function))
@@ -172,15 +183,15 @@ Public Class StandardApplication
             Else
                 i += 1
                 For j = i To saTokens.Count - 1
-                    TokenQueue.Enqueue(saTokens(j))
+                    Interactor.TokenQueue.Enqueue(saTokens(j))
                 Next
                 action.Execute()
-                _Interactor.ShowMessage("")
+                Interactor.ShowMessage("")
                 Return (action.Name = "quit")
             End If
         Else
             Interactor.ShowMessage(InternalLocRepo.TransF("use_message", executionCtxNode.Value.Name))
-            CurrentContextNode = executionCtxNode
+            _currentContextNode = executionCtxNode
             Return False
         End If
     End Function

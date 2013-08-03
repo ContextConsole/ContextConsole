@@ -96,7 +96,6 @@
     <Compile Include="Context\IContextExtensions.vb" />
     <Compile Include="Context\ReflectionActionFinder.vb" />
     <Compile Include="IcmContextConsoleLocalizationAttribute.vb" />
-    <Compile Include="Interactor\BaseInteractor.vb" />
     <Compile Include="Context\BaseContext.vb" />
     <Compile Include="Interactor\IInteractorExtensions.vb" />
     <Compile Include="Interactor\StreamsInteractor.vb" />

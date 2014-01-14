@@ -59,9 +59,9 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Icm.Core, Version=2.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Icm.Core, Version=2.0.4.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Icm.Core.2.0.1\lib\net45\Icm.Core.dll</HintPath>
+      <HintPath>..\packages\Icm.Core.2.0.4\lib\net45\Icm.Core.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -87,7 +87,6 @@
     <Compile Include="ContextTreeBuilder\IContextTreeBuilder.vb" />
     <Compile Include="ContextTreeBuilder\ReflectionContextTreeBuilder.vb" />
     <Compile Include="ContextTreeBuilder\TypeContextTreeBuilder.vb" />
-    <Compile Include="ContextTreeBuilder\SimpleContextTreeBuilder.vb" />
     <Compile Include="Context\IActionFinder.vb" />
     <Compile Include="Context\IContextExtensions.vb" />
     <Compile Include="Context\ReflectionActionFinder.vb" />
@@ -104,6 +103,7 @@
     <Compile Include="NamesSynonyms\INamedWithSynonyms.vb" />
     <Compile Include="NamesSynonyms\INamedWithSynonymsExtensions.vb" />
     <Compile Include="NamesSynonyms\SynonymAttribute.vb" />
+    <Compile Include="ResourceManagerExtensions.vb" />
     <Compile Include="TokenParser\ITokenParser.vb" />
     <Compile Include="TokenParser\ParseError.vb" />
     <Compile Include="TokenParser\StandardTokenParser.vb" />
@@ -138,9 +138,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\Icm.ContextConsole.net45\packages.config">
-      <Link>packages.config</Link>
-    </None>
     <None Include="My Project\Application.myapp">
       <Generator>MyApplicationCodeGenerator</Generator>
       <LastGenOutput>Application.Designer.vb</LastGenOutput>
@@ -150,6 +147,7 @@
       <CustomToolNamespace>My</CustomToolNamespace>
       <LastGenOutput>Settings.Designer.vb</LastGenOutput>
     </None>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />

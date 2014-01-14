@@ -14,7 +14,7 @@ Public Class ReflectionContextTreeBuilder
     Public Sub New(rootContextType As Type)
         MyBase.New()
         Dim typeRootNode = New TreeNode(Of Type)(rootContextType)
-        Dim childContextTypes = GetAllImplementors(Of IContext)().Where(Function(ctxType) Not rootContextType.Equals(ctxType))
+        Dim childContextTypes = GetAllImplementors(Of IContext)().Where(Function(ctxType) Not rootContextType.Equals(ctxType) AndAlso Not ctxType.IsNestedPrivate)
         typeRootNode.AddChildren(childContextTypes)
         Root = typeRootNode
     End Sub

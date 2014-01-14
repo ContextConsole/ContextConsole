@@ -8,7 +8,6 @@ Public Class MethodInfoActionTest
     Private Class TestContext
         Implements IContext
 
-
         Public Function Name() As String Implements IContext.Name
             Throw New NotImplementedException
         End Function

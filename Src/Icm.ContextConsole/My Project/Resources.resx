@@ -157,4 +157,7 @@
     <value>{0}: change to {0} subcontext</value>
     <comment>root_use description</comment>
   </data>
+  <data name="root_contexts" xml:space="preserve">
+    <value>Shows subcontexts of root</value>
+  </data>
 </root>

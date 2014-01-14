@@ -33,13 +33,13 @@ Public MustInherit Class BaseContext
     Protected Overridable Sub Initialize()
     End Sub
 
-    Public Function Name() As String Implements IContext.Name
+    Public Overridable Function Name() As String Implements IContext.Name
         Dim ctlTypeName = Me.GetType.Name
         Return ctlTypeName.Substring(0, ctlTypeName.Length - "Context".Length).ToLower
     End Function
 
 
-    Public Function Synonyms() As IEnumerable(Of String) Implements IContext.Synonyms
+    Public Overridable Function Synonyms() As IEnumerable(Of String) Implements IContext.Synonyms
         Dim synAttr = Me.GetType().GetAttribute(Of SynonymAttribute)(True)
         Dim result As New List(Of String)
         If synAttr IsNot Nothing Then

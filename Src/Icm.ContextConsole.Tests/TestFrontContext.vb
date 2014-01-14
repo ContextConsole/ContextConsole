@@ -7,10 +7,8 @@ Imports Icm.IO
 Public Class TestFrontContext
     Inherits RootContext
 
-    Public Sub New(ByVal interactor As IInteractor)
-        MyBase.New()
-        Me.Interactor = interactor
-        BaseInitialize(New StandardApplication(Me, interactor))
-    End Sub
 
+    Public Overrides Sub Credits()
+
+    End Sub
 End Class

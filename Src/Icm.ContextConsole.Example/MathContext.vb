@@ -3,6 +3,12 @@ Imports Icm.ContextConsole
 Public Class MathContext
     Inherits BaseContext
 
+    Property PostFix As String
+
+    Public Overrides Function Name() As String
+        Return MyBase.Name() & PostFix
+    End Function
+
     Public Sub Add()
         Dim num1 = Interactor.AskInteger("Number 1")
         Dim num2 = Interactor.AskInteger("Number 2")

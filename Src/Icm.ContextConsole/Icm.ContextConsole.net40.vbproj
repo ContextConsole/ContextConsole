@@ -55,13 +55,9 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Icm.Core, Version=1.3.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Icm.Core, Version=2.0.4.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Icm.Core.1.3.0\lib\net40\Icm.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="Ninject, Version=3.0.0.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Ninject.3.0.1.10\lib\net40\Ninject.dll</HintPath>
+      <HintPath>..\packages\Icm.Core.2.0.4\lib\net40\Icm.Core.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -86,11 +82,13 @@
     <Compile Include="Application\IApplicationContext.vb" />
     <Compile Include="ContextTreeBuilder\IContextTreeBuilder.vb" />
     <Compile Include="ContextTreeBuilder\ReflectionContextTreeBuilder.vb" />
-    <Compile Include="ContextTreeBuilder\SimpleContextTreeBuilder.vb" />
     <Compile Include="ContextTreeBuilder\TypeContextTreeBuilder.vb" />
     <Compile Include="Context\IActionFinder.vb" />
     <Compile Include="Context\IContextExtensions.vb" />
     <Compile Include="Context\ReflectionActionFinder.vb" />
+    <Compile Include="DependencyResolver\IDependencyResolver.vb" />
+    <Compile Include="DependencyResolver\IDependencyResolverExtensions.vb" />
+    <Compile Include="DependencyResolver\StandardDependencyResolver.vb" />
     <Compile Include="IcmContextConsoleLocalizationAttribute.vb" />
     <Compile Include="Context\BaseContext.vb" />
     <Compile Include="Interactor\IInteractorExtensions.vb" />
@@ -101,7 +99,7 @@
     <Compile Include="NamesSynonyms\INamedWithSynonyms.vb" />
     <Compile Include="NamesSynonyms\INamedWithSynonymsExtensions.vb" />
     <Compile Include="NamesSynonyms\SynonymAttribute.vb" />
-    <Compile Include="StandardNinjectModule.vb" />
+    <Compile Include="ResourceManagerExtensions.vb" />
     <Compile Include="TokenParser\ITokenParser.vb" />
     <Compile Include="TokenParser\ParseError.vb" />
     <Compile Include="TokenParser\StandardTokenParser.vb" />

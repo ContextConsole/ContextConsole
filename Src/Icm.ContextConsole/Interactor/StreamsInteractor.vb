@@ -27,21 +27,8 @@ Public Class StreamsInteractor
 
     Property CommandPromptSeparator As String = "> " Implements IInteractor.CommandPromptSeparator
 
-    Public Sub New()
-        MyBase.New()
-
-        Reader = Console.In
-        Writer = Console.Out
-        ErrorWriter = Console.Error
-    End Sub
-
-    Public Sub New(inputtr As TextReader, outputtw As TextWriter, errortw As TextWriter, tokenQueue As Queue(Of String))
-        MyBase.New()
-
-        Reader = inputtr
-        Writer = outputtw
-        ErrorWriter = errortw
-        Me.TokenQueue = tokenQueue
+    Public Sub New(locRepo As ILocalizationRepository)
+        MyClass.New(locRepo, Console.In, Console.Out, Console.Error, New Queue(Of String))
     End Sub
 
     Public Sub New(locRepo As ILocalizationRepository, inputtr As TextReader, outputtw As TextWriter, errortw As TextWriter, tokenQueue As Queue(Of String))
@@ -77,7 +64,7 @@ Public Class StreamsInteractor
     Public Function AskString(prompt As String, validation As Func(Of String, Boolean), defaultValue As String) As String Implements IInteractor.AskString
         Dim response As String
         Do
-            response = AskStringWithTokenQueue(prompt, defaultValue, ":")
+            response = AskStringWithTokenQueue(prompt, defaultValue, PromptSeparator)
             If String.IsNullOrEmpty(response) Then
                 Return defaultValue
             End If
@@ -136,11 +123,11 @@ Public Class StreamsInteractor
     Private Sub WriteList(Of T As Class)(ByVal values As IEnumerable(Of T), ByVal key As Func(Of T, String), ByVal toString As Func(Of T, String), ByVal selectedList As List(Of T))
         If selectedList Is Nothing Then
             For Each value In values
-                Writer.Write(GetListItem(value, key, toString, selected:=False))
+                Writer.WriteLine(GetListItem(value, key, toString, selected:=False))
             Next
         Else
             For Each value In values
-                Writer.Write(GetListItem(value, key, toString, selected:=selectedList.Contains(value)))
+                Writer.WriteLine(GetListItem(value, key, toString, selected:=selectedList.Contains(value)))
             Next
         End If
     End Sub

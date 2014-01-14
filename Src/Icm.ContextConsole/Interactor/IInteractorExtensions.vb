@@ -1,5 +1,4 @@
 Imports System.Runtime.CompilerServices
-Imports Icm.Ninject.KernelContainer
 
 Public Module IInteractorExtensions
 
@@ -115,14 +114,6 @@ Public Module IInteractorExtensions
 
     <Extension>
     Public Function AskContext(interactor As IInteractor, ByVal prompt As String, caller As IContext, contexts As IEnumerable(Of IContext)) As IContext
-        If contexts Is Nothing Then
-            Dim ctls = New List(Of IContext)
-
-            ctls.Add(Instance(Of IContext))
-            ctls.AddRange(Instances(Of IContext))
-            contexts = ctls
-        End If
-
         Dim contextName = interactor.AskString(prompt)
 
         Dim ctl As IContext

@@ -117,6 +117,12 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="main_credits" xml:space="preserve">
+    <value>Show initial credits of the application</value>
+  </data>
+  <data name="main_test" xml:space="preserve">
+    <value>Test action</value>
+  </data>
   <data name="math_add" xml:space="preserve">
     <value>Adds two numbers</value>
   </data>

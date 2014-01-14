@@ -17,4 +17,8 @@ Public Interface IApplication
     ReadOnly Property InternalLocRepo As ILocalizationRepository
     ReadOnly Property ExternalLocRepo As ILocalizationRepository
 
+    Sub Run()
+
+    Property DependencyResolver As IDependencyResolver
+
 End Interface

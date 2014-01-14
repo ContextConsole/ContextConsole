@@ -1,4 +1,3 @@
-Imports Icm.Ninject
 Imports Icm.Tree
 
 ''' <summary>
@@ -9,14 +8,36 @@ Imports Icm.Tree
 Public Class TypeContextTreeBuilder
     Implements IContextTreeBuilder
 
+    Private _root As ITreeNode(Of Type)
 
-    Private ReadOnly _root As ITreeNode(Of Type)
+    Protected Sub New()
+    End Sub
 
     Public Sub New(root As TreeNode(Of Type))
         _root = root
     End Sub
 
+    Property Application As IApplication Implements IContextTreeBuilder.Application
+
+    Protected Property Root As ITreeNode(Of Type)
+        Get
+            Return _root
+        End Get
+        Set(value As ITreeNode(Of Type))
+            _root = value
+        End Set
+    End Property
+
     Public Function GetTree() As ITreeNode(Of IContext) Implements IContextTreeBuilder.GetTree
-        Return _root.Select(Function(typ) DirectCast(Instance(typ), IContext))
+        If Application Is Nothing Then
+            Throw New InvalidOperationException("Cannot get context tree if the application is not set")
+        End If
+
+        Dim contextRootNode = New TransformTreeNode(Of Type, IContext)(_root, Function(ctxType)
+                                                                                  Dim context = Application.DependencyResolver.GetService(Of IContext)(ctxType)
+                                                                                  context.Initialize(Application)
+                                                                                  Return context
+                                                                              End Function)
+        Return contextRootNode
     End Function
 End Class

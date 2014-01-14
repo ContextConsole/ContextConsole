@@ -16,6 +16,8 @@ Public MustInherit Class RootContext
         Application = app
     End Sub
 
+    Public MustOverride Sub Credits()
+
     Public Sub Help()
         ' Actions of current context
         ShowActions(Application.CurrentContextNode.Value)
@@ -37,13 +39,13 @@ Public MustInherit Class RootContext
     End Sub
 
     Public Sub Contexts()
-        For Each item In Application.RootContextNode.DepthPreorderTraverseWithLevel
-            Interactor.ShowMessage(New String(" "c, item.Item2) & item.Item1.Name)
+        For Each contextAndLevel In Application.RootContextNode.DepthPreorderTraverseWithLevel
+            Interactor.ShowMessage(New String(" "c, contextAndLevel.Level) & contextAndLevel.Result.Name)
         Next
     End Sub
 
     Public Overridable Sub Quit()
-        Interactor.ShowMessage(locRepo("quit_bye"))
+        Interactor.ShowMessage(locRepo.Trans("quit_bye"))
     End Sub
 
     Private Sub ShowActions(ByVal ctl As IContext)
@@ -69,9 +71,9 @@ Public MustInherit Class RootContext
 
     Private Function TranslateActionDescription(action As IAction) As String
         If action.IsInternal Then
-            Return locRepo(action.LocalizationKey)
+            Return locRepo.Trans(action.LocalizationKey)
         Else
-            Return extLocRepo(action.LocalizationKey)
+            Return extLocRepo.Trans(action.LocalizationKey)
         End If
     End Function
 

@@ -12,7 +12,75 @@ Public Class StandardApplication
     Private _contextsCache As IEnumerable(Of IContext)
     Private ReadOnly _tokenParser As ITokenParser
 
+    Public Sub New(rootContextType As Type,
+                  Optional tokenParser As ITokenParser = Nothing,
+                  Optional interactor As IInteractor = Nothing,
+                  Optional intLocRepo As ILocalizationRepository = Nothing,
+                  Optional extLocRepo As ILocalizationRepository = Nothing
+                  )
+        MyClass.New(
+            New ReflectionContextTreeBuilder(rootContextType),
+            tokenParser,
+            interactor,
+            intLocRepo,
+            extLocRepo
+        )
+    End Sub
+
+    Public Sub New(rootContextNode As TreeNode(Of Type),
+                  Optional tokenParser As ITokenParser = Nothing,
+                  Optional interactor As IInteractor = Nothing,
+                  Optional intLocRepo As ILocalizationRepository = Nothing,
+                  Optional extLocRepo As ILocalizationRepository = Nothing
+                  )
+        MyClass.New(
+            New TypeContextTreeBuilder(rootContextNode),
+            tokenParser,
+            interactor,
+            intLocRepo,
+            extLocRepo
+        )
+    End Sub
+
+    Public Sub New(
+                  treeBuilder As IContextTreeBuilder,
+                  Optional tokenParser As ITokenParser = Nothing,
+                  Optional interactor As IInteractor = Nothing,
+                  Optional intLocRepo As ILocalizationRepository = Nothing,
+                  Optional extLocRepo As ILocalizationRepository = Nothing
+                  )
+
+        If tokenParser Is Nothing Then
+            _tokenParser = New StandardTokenParser
+        Else
+            _tokenParser = tokenParser
+        End If
+        If intLocRepo Is Nothing Then
+            intLocRepo = New ResourceLocalizationRepository(My.Resources.ResourceManager)
+        End If
+        If extLocRepo Is Nothing Then
+            extLocRepo = New DictionaryLocalizationRepository()
+        End If
+        If interactor Is Nothing Then
+            interactor = New StreamsInteractor(intLocRepo)
+        End If
+        If tokenParser Is Nothing Then
+            tokenParser = New StandardTokenParser()
+        End If
+        treeBuilder.Application = Me
+        _interactor = interactor
+        _internalLocRepo = intLocRepo
+        _externalLocRepo = extLocRepo
+        ApplicationPrompt = System.Reflection.Assembly.GetExecutingAssembly.CodeBase
+        DependencyResolver = New StandardDependencyResolver
+        ' Stablish root context in the last place so that the IContext.Initialize routine
+        ' can access the former application values.
+        SetRootContextNode(treeBuilder.GetTree)
+    End Sub
+
     Property ApplicationPrompt As String Implements IApplication.ApplicationPrompt
+
+    Property DependencyResolver As IDependencyResolver Implements IApplication.DependencyResolver
 
     ReadOnly Property ExternalLocRepo() As ILocalizationRepository Implements IApplication.ExternalLocRepo
         Get
@@ -32,48 +100,25 @@ Public Class StandardApplication
         End Get
     End Property
 
-    Public Sub New(rootContext As IContext)
-        MyClass.New(
-            New SimpleContextTreeBuilder(New TreeNode(Of IContext)(rootContext)),
-            New StandardTokenParser,
-            New StreamsInteractor,
-            New DictionaryLocalizationRepository,
-            New DictionaryLocalizationRepository)
-        Interactor.SetLocalizationRepo(InternalLocRepo)
-    End Sub
-
-    Public Sub New(rootContext As IContext, inter As IInteractor)
-        MyClass.New(
-            New SimpleContextTreeBuilder(New TreeNode(Of IContext)(rootContext)),
-            New StandardTokenParser,
-            inter,
-            New DictionaryLocalizationRepository,
-            New DictionaryLocalizationRepository)
-    End Sub
-
-    <Global.Ninject.Inject>
-    Public Sub New(
-                  treeBuilder As IContextTreeBuilder,
-                  tokenParser As ITokenParser,
-                  interactor As IInteractor,
-                  <IcmContextConsoleLocalization> intLocRepo As ILocalizationRepository,
-                  extLocRepo As ILocalizationRepository
-                  )
-
-        If tokenParser Is Nothing Then
-            _tokenParser = New StandardTokenParser
-        Else
-            _tokenParser = tokenParser
-        End If
-        _interactor = interactor
-        _internalLocRepo = intLocRepo
-        _externalLocRepo = extLocRepo
-        ApplicationPrompt = System.Reflection.Assembly.GetExecutingAssembly.CodeBase
-        ' Stablish root context in the last place so that the IContext.Initialize routine
-        ' can access the former application values.
-        SetRootContextNode(treeBuilder.GetTree)
-
-    End Sub
+    ''' <summary>
+    ''' 
+    ''' </summary>
+    ''' <typeparam name="TMain"></typeparam>
+    ''' <returns></returns>
+    ''' <remarks>This builder is here because there is no such thing as generic constructors.</remarks>
+    Public Shared Function Create(Of TMain As IContext)(
+            Optional tokenParser As ITokenParser = Nothing,
+            Optional interactor As IInteractor = Nothing,
+            Optional intLocRepo As ILocalizationRepository = Nothing,
+            Optional extLocRepo As ILocalizationRepository = Nothing
+            ) As IApplication
+        Dim app As New StandardApplication(GetType(TMain),
+            tokenParser,
+            interactor,
+            intLocRepo,
+            extLocRepo)
+        Return app
+    End Function
 
     ReadOnly Property CurrentContext As IContext
         Get
@@ -90,10 +135,6 @@ Public Class StandardApplication
 
     Private Sub SetRootContextNode(value As ITreeNode(Of IContext))
         If Not _rootContextNode Is value Then
-            ' Give reference to the application to all the contexts
-            For Each ctl In value.DepthPreorderTraverse()
-                ctl.Initialize(Me)
-            Next
             _rootContextNode = value
         End If
         _currentContextNode = value
@@ -112,14 +153,28 @@ Public Class StandardApplication
         Return _contextsCache
     End Function
 
+    Public Sub Run() Implements IApplication.Run
+        Dim action = RootContextNode.Value.GetActions().GetNamedItem("credits")
+        action.Execute()
+        Do Until ExecuteCommand()
+            DependencyResolver.ClearRequestScope()
+        Loop
+    End Sub
+
     Private Function ExecuteCommand() As Boolean Implements IApplication.ExecuteCommand
         ' Ask command line
         Dim command As String
-        If CurrentContextNode Is RootContextNode Then
-            command = Interactor.AskCommand(ApplicationPrompt)
-        Else
-            command = Interactor.AskCommand(ApplicationPrompt & " " & CurrentContextNode.Ancestors.Reverse.Skip(1).Select(Function(node) node.Name).JoinStr(" "))
-        End If
+
+        Dim prompt =
+            {ApplicationPrompt}.Concat(
+                CurrentContextNode.
+                Ancestors.
+                Reverse.
+                Skip(1).
+                Select(Function(node) node.Name)).
+            JoinStr(" ")
+
+        command = Interactor.AskCommand(prompt)
 
         ' Parse command line
         _tokenParser.Initialize()

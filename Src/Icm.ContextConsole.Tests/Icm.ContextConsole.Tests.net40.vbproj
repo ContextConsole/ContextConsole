@@ -48,9 +48,9 @@
     <OptionInfer>On</OptionInfer>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Icm.Core, Version=2.0.4.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Icm.Core, Version=2.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Icm.Core.2.0.4\lib\net40\Icm.Core.dll</HintPath>
+      <HintPath>..\packages\Icm.Core.2.1.0\lib\net40\Icm.Core.dll</HintPath>
     </Reference>
     <Reference Include="Moq, Version=4.0.10827.0, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -95,7 +95,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="StandardTokenParserTest.vb" />
     <Compile Include="StreamsInteractorHelper.vb" />
     <Compile Include="StreamsInteractorTest.vb" />
     <Compile Include="TestFrontContext.vb" />
@@ -125,6 +124,9 @@
       <Project>{9B76F4BD-5789-4318-AEAC-22D9AEBC91A0}</Project>
       <Name>Icm.ContextConsole.net40</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />

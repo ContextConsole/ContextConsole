@@ -51,9 +51,9 @@
     <OptionInfer>On</OptionInfer>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Icm.Core, Version=2.0.4.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Icm.Core, Version=2.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Icm.Core.2.0.4\lib\net45\Icm.Core.dll</HintPath>
+      <HintPath>..\packages\Icm.Core.2.1.0\lib\net45\Icm.Core.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />

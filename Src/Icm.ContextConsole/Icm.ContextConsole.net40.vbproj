@@ -55,9 +55,9 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Icm.Core, Version=2.0.4.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Icm.Core, Version=2.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Icm.Core.2.0.4\lib\net40\Icm.Core.dll</HintPath>
+      <HintPath>..\packages\Icm.Core.2.1.0\lib\net40\Icm.Core.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -100,9 +100,6 @@
     <Compile Include="NamesSynonyms\INamedWithSynonymsExtensions.vb" />
     <Compile Include="NamesSynonyms\SynonymAttribute.vb" />
     <Compile Include="ResourceManagerExtensions.vb" />
-    <Compile Include="TokenParser\ITokenParser.vb" />
-    <Compile Include="TokenParser\ParseError.vb" />
-    <Compile Include="TokenParser\StandardTokenParser.vb" />
     <Compile Include="Interactor\IInteractor.vb" />
     <Compile Include="Context\IContext.vb" />
     <Compile Include="Application\IApplication.vb" />

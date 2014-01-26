@@ -6,7 +6,7 @@ Imports Icm.Reflection
 ''' </summary>
 ''' <remarks>
 ''' The first level is formed by the root context. The second level is formed by all the instantiable types (using Ninject)
-''' of IContext, except for the type of the root context itself.)
+''' of IContext, except for the type of the root context itself.) <see cref="Action(Of Integer)"></see>
 ''' </remarks>
 Public Class ReflectionContextTreeBuilder
     Inherits TypeContextTreeBuilder

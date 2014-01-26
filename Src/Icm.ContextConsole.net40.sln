@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio Express 2013 for Web
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "Icm.ContextConsole.net40", "Icm.ContextConsole\Icm.ContextConsole.net40.vbproj", "{9B76F4BD-5789-4318-AEAC-22D9AEBC91A0}"
 EndProject
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "Icm.ContextConsole.Tests.net40", "Icm.ContextConsole.Tests\Icm.ContextConsole.Tests.net40.vbproj", "{B13F5CD0-AC1C-4340-8886-0328E32FE43B}"

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <title>ContextConsole by ContextConsole</title>
+  </head>
+
+  <body>
+    <header>
+      <div class="inner">
+        <h1>ContextConsole</h1>
+        <h2>Organize your complex console applications</h2>
+        <a href="https://github.com/ContextConsole/ContextConsole" class="button"><small>View project on</small> GitHub</a>
+      </div>
+    </header>
+
+    <div id="content-wrapper">
+      <div class="inner clearfix">
+        <section id="main-content">
+          <h2>
+<a id="introduction" class="anchor" href="#introduction" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Introduction</h2>
+
+<p>Icm.ContextConsole is a framework for building applications in the style of <a href="http://en.wikipedia.org/wiki/Netsh">Netsh</a> tool. This tool exposes a series of top-level commands and organizes the rest of them in a hierarchical structure of contexts. This is also a typical organization for command-line interfaces embedded in hardware devices.</p>
+
+<p>Let's see an example for showing the capabilities of the framework. Imagine this context hierarchy:</p>
+
+<ul>
+<li>(root context): commands CMD_R1, CMD_R2
+
+<ul>
+<li>Context A: commands CMD_A1, CMD_A2</li>
+<li>Context B: commands CMD_B1, CMD_B2
+
+<ul>
+<li>Context C: command CMD_C1</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+<p>Our application is called APP.EXE. We can do the following things:</p>
+
+<p>Directly execute any command:</p>
+
+<pre><code>&gt; APP.EXE CMD_R1
+Executing command CMD_R1
+&gt; APP.EXE A CMD_A2
+Executing command CMD_A2
+&gt; APP.EXE B C CMD_C1
+Executing command CMD_C1
+</code></pre>
+
+<p>Enter interactive mode and execute commands:</p>
+
+<pre><code>&gt; APP.EXE
+Welcome to APP's interactive mode!
+APP&gt; CMD_R1
+Executing command CMD_R1
+APP&gt; B
+Going to context B
+APP B&gt; C CMD_C1
+Executing command CMD_C1
+APP B&gt; C
+Going to context C
+APP B C&gt; CMD_R1
+Executing CMD_R1
+APP B C&gt; ..
+Going back to context B
+APP B&gt; ..
+Going back to root context A
+APP&gt; B C
+Going to context C
+APP B C&gt; quit
+Bye!
+&gt;
+</code></pre>
+
+<p>As you can see, at any moment you are able to execute the commands of the current context, all the ancestors and all the descendants; but you must always qualify the commands of the descendants.</p>
+
+<h2>
+<a id="the-beginning-applicationfactory" class="anchor" href="#the-beginning-applicationfactory" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>The beginning: ApplicationFactory</h2>
+
+<p>This class fires up the system by initializing with <code>Initialize</code>. This method configures the dependency injector with the standard services for the following interfaces:</p>
+
+<ul>
+<li>
+<code>IContextManager</code>: This service is used by the root context to instantiate contexts and actions.</li>
+<li>
+<code>IInteractor</code>: This service is used by the actions to interact with the user.</li>
+<li>
+<code>ITokenParser</code>: This service splits lines into tokens (taking into account quotes, quote escaping, etc.).</li>
+<li>
+<code>IContextTreeBuilder</code>: This service builds the hierarchy of context, in the form of a <code>ITreeNode(Of IContext)</code>.</li>
+<li>
+<code>IContext</code>: There can be many contexts, and they must be bound to the interface if we use the standard <code>IContextTreeBuilder</code>.</li>
+</ul>
+
+<p>After initialization, the root context is instantiated and initialized.</p>
+
+<p>Finally, it enters a loop in which the root context is asked to execute commands until one of them returns <code>false</code> upon execution.</p>
+
+<p>What does an application do to execute commands?</p>
+
+<p>The <code>StandardApplication</code> class provides a simple implementation that:</p>
+
+<ul>
+<li>Uses the interactor to ask a command line</li>
+<li>Uses the token parser to split the command line</li>
+<li>Gets the execution context by interpreting tokens as controller names (that must be each children of the former) until one token fails to be interpreted as such or we run out of tokens.</li>
+<li>If run out of tokens, change to the final context</li>
+<li>In other case, the next token must be an action name and the rest of tokens are enqueued for further use within the selected action</li>
+<li>Uses action finder to get the action instance.</li>
+<li>Executes the action (<code>IAction.Execute</code>)</li>
+<li>If the action is a "quit" action then returns true</li>
+<li>If the mode is not fully interactive (something has come from the environment command line) then returns true</li>
+<li>Else, returns false</li>
+</ul>
+
+<p>Notable facts: nowhere it is used the <code>Console</code> class directly. An appropriate <code>IFrontInteractor</code> could be used to get or set values from a GUI, for example, or a network connection. In fact, the provided default interactors to not use <code>Console</code> either but streams. The <code>Console</code> streams are taken only when you use the default constructor.</p>
+
+<h2>
+<a id="ok-so-how-do-i-start" class="anchor" href="#ok-so-how-do-i-start" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>OK, so how do I start</h2>
+
+<p>You can do something as simple as creating a front controller inheriting from <code>FrontController</code>. Add some routines. In your <code>Main</code> method, create a <code>ConsoleMvcApplication</code> instance and call <code>Start()</code>. That's all!</p>
+
+<p>If you want to classify all the actions of your ConsoleMvc app into controllers, just create more classes, each of them inheriting from <code>BackController</code> and put the actions into them.</p>
+
+<p>If you want to customize the services, you can inherit from <code>ConsoleMvcApplication</code> and override <code>Initialize</code>. Get <code>Icm.Ninject.Kernel</code> and bind the services as you please. Just remember that all the aforementioned services must be bound (except for <code>IBackController</code>).</p>
+        </section>
+
+        <aside id="sidebar">
+          <a href="https://github.com/ContextConsole/ContextConsole/zipball/master" class="button">
+            <small>Download</small>
+            .zip file
+          </a>
+          <a href="https://github.com/ContextConsole/ContextConsole/tarball/master" class="button">
+            <small>Download</small>
+            .tar.gz file
+          </a>
+
+          <p class="repo-owner"><a href="https://github.com/ContextConsole/ContextConsole"></a> is maintained by <a href="https://github.com/ContextConsole">ContextConsole</a>.</p>
+
+          <p>This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the Architect theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.</p>
+        </aside>
+      </div>
+    </div>
+
+  
+  </body>
+</html>

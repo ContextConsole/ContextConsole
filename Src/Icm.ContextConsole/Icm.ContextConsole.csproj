@@ -1,0 +1,101 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{003B832A-BC6C-4381-ADD4-A60C34921574}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Icm.ContextConsole</RootNamespace>
+    <AssemblyName>Icm.ContextConsole</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Icm.Core, Version=2.2.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Icm.Core.2.2.0\lib\net45\Icm.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Action\IAction.cs" />
+    <Compile Include="Action\MethodInfoAction.cs" />
+    <Compile Include="ApplicationFactory.cs" />
+    <Compile Include="Application\IApplication.cs" />
+    <Compile Include="Application\IApplicationContext.cs" />
+    <Compile Include="Application\StandardApplication.cs" />
+    <Compile Include="ContextTreeBuilder\IContextTreeBuilder.cs" />
+    <Compile Include="ContextTreeBuilder\ReflectionContextTreeBuilder.cs" />
+    <Compile Include="ContextTreeBuilder\TypeContextTreeBuilder.cs" />
+    <Compile Include="Context\BaseContext.cs" />
+    <Compile Include="Context\IActionFinder.cs" />
+    <Compile Include="Context\IContext.cs" />
+    <Compile Include="Context\IContextExtensions.cs" />
+    <Compile Include="Context\ReflectionActionFinder.cs" />
+    <Compile Include="Context\RootContext.cs" />
+    <Compile Include="DependencyResolver\IDependencyResolver.cs" />
+    <Compile Include="DependencyResolver\IDependencyResolverExtensions.cs" />
+    <Compile Include="DependencyResolver\StandardDependencyResolver.cs" />
+    <Compile Include="IcmContextConsoleLocalizationAttribute.cs" />
+    <Compile Include="Interactor\IInteractor.cs" />
+    <Compile Include="Interactor\IInteractorExtensions.cs" />
+    <Compile Include="Interactor\StreamsInteractor.cs" />
+    <Compile Include="My Project\AssemblyInfo.cs" />
+    <Compile Include="My Project\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="NamesSynonyms\IEnumerableOfINamedWithSynonymsExtensions.cs" />
+    <Compile Include="NamesSynonyms\INamedWithSynonyms.cs" />
+    <Compile Include="NamesSynonyms\INamedWithSynonymsExtensions.cs" />
+    <Compile Include="NamesSynonyms\SynonymAttribute.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ResourceManagerExtensions.cs" />
+    <Compile Include="TypeExtensions.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="My Project\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>My.Resources</CustomToolNamespace>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

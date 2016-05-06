@@ -1,13 +1,7 @@
-
-using Microsoft.VisualBasic;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Data;
-using System.Diagnostics;
 using Icm.Tree;
 
 using Icm.Localization;
+using static Icm.Localization.PhraseFactory;
 
 /// <summary>
 /// This base root context provides implementation of Help action and Quit action.
@@ -17,11 +11,11 @@ public abstract class RootContext : BaseContext
 {
 
 
-	private IApplication Application;
+	private IApplication _application;
 	protected override void BaseInitialize(IApplication app)
 	{
 		base.BaseInitialize(app);
-		Application = app;
+		_application = app;
 	}
 
 	public abstract void Credits();
@@ -29,23 +23,23 @@ public abstract class RootContext : BaseContext
 	public void Help()
 	{
 		// Actions of current context
-		ShowActions(Application.CurrentContextNode.Value);
+		ShowActions(_application.CurrentContextNode.Value);
 
 		// Available subcontexts
 		Interactor.ShowList("Subcontexts", 
-            Application.CurrentContextNode.GetChildNodes(), 
+            _application.CurrentContextNode.GetChildNodes(), 
             ctx => string.Format(My.Resources.Resources.root_use, ctx.Value.Name().ToLower()), 
             hideIfEmpty: true);
 
 		// Inherited actions from ancestors
-		foreach (var ctx in Application.CurrentContextNode.ProperAncestors()) {
+		foreach (var ctx in _application.CurrentContextNode.ProperAncestors()) {
 			ShowActions(ctx);
 		}
 	}
 
 	public void Contexts()
 	{
-		foreach (var contextAndLevel in Application.RootContextNode.DepthPreorderTraverseWithLevel()) {
+		foreach (var contextAndLevel in _application.RootContextNode.DepthPreorderTraverseWithLevel()) {
 			Interactor.ShowMessage(new string(' ', contextAndLevel.Level) + contextAndLevel.Result.Name());
 		}
 	}
@@ -57,16 +51,15 @@ public abstract class RootContext : BaseContext
 
 	private void ShowActions(IContext ctl)
 	{
-		bool IsCurrent = Application.CurrentContextNode.Value.Name() == ctl.Name();
+		bool isCurrent = _application.CurrentContextNode.Value.Name() == ctl.Name();
 
-		string title = null;
-		if (IsCurrent) {
-			title = locRepo.TransF("help_title", ctl.Name(), PhrF("help_current"));
-		} else {
-			title = locRepo.TransF("help_title", ctl.Name());
-		}
+		string title;
+		title = isCurrent 
+            ? locRepo.TransF("help_title", ctl.Name(), PhrF("help_current")) 
+            : locRepo.TransF("help_title", ctl.Name());
 
-		Interactor.ShowList(title, ctl.GetActions(), action => string.Format("{0}: {1}", action.Name().ToLower(), TranslateActionDescription(action) ?? action.Name()));
+		Interactor.ShowList(title, ctl.GetActions(), action =>
+		    $"{action.Name().ToLower()}: {TranslateActionDescription(action) ?? action.Name()}");
 	}
 
 	private string TranslateActionDescription(IAction action)

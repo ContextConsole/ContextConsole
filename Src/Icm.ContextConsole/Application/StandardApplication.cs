@@ -1,10 +1,5 @@
-
-using Microsoft.VisualBasic;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Data;
-using System.Diagnostics;
 using System.Linq;
 using Icm;
 using Icm.Localization;
@@ -38,7 +33,7 @@ public class StandardApplication : IApplication
 			_tokenParser = tokenParser;
 		}
 		if (intLocRepo == null) {
-			intLocRepo = new ResourceLocalizationRepository(My.Resources.ResourceManager);
+			intLocRepo = new ResourceLocalizationRepository(My.Resources.Resources.ResourceManager);
 		}
 		if (extLocRepo == null) {
 			extLocRepo = new DictionaryLocalizationRepository();

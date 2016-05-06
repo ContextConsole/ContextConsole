@@ -1,13 +1,6 @@
-
-using Microsoft.VisualBasic;
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Data;
-using System.Diagnostics;
 using Icm.Localization;
 using System.Resources;
-using Icm.Tree;
 
 /// <summary>
 /// Various methods for building and running an Icm.ContextConsole application.

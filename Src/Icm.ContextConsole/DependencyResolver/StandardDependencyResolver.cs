@@ -1,20 +1,13 @@
-
-using Microsoft.VisualBasic;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Data;
-using System.Diagnostics;
+
 public class StandardDependencyResolver : IDependencyResolver
 {
-
-
-
 	private Dictionary<Type, object> store = new Dictionary<Type, object>();
 	public virtual object GetService(Type service)
 	{
 		object result = null;
-		if (!store.TryGetValue(service, result)) {
+		if (!store.TryGetValue(service, out result)) {
 			result = CreateService(service);
 			store.Add(service, result);
 		}
